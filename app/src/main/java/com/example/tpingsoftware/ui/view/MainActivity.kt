@@ -1,7 +1,8 @@
-package com.example.tpingsoftware
+package com.example.tpingsoftware.ui.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.tpingsoftware.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
