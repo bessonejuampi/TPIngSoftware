@@ -14,6 +14,13 @@ class LoginActivity : AppCompatActivity() {
     private val viewModel :LoginViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+
+        viewModel.RegisterNewUser()
+
     }
 }
