@@ -5,16 +5,16 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
-interface LoginRepositoryContract{
+interface RegisterRepositoryContract{
     suspend fun registerNewUser(email:String, password:String): Task<AuthResult>
 }
 
-class LoginRepository(
+class RegisterRepository(
     private val auth : FirebaseAuth,
     private val context: Context
-) : LoginRepositoryContract{
+) : RegisterRepositoryContract{
     override suspend fun registerNewUser(email: String, password: String): Task<AuthResult> {
-        return auth.signInWithEmailAndPassword(email, password)
+        return auth.createUserWithEmailAndPassword(email, password)
     }
 
 }

@@ -1,13 +1,17 @@
 package com.example.tpingsoftware.ui.viewModels
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tpingsoftware.di.repository.LoginRepositoryContract
+import com.example.tpingsoftware.ui.view.RegisterActivity
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val repository: LoginRepositoryContract
+    private val repository: LoginRepositoryContract,
+    private val context:Context
 ) :ViewModel() {
 
     fun RegisterNewUser(email:String, password:String){
@@ -26,6 +30,11 @@ class LoginViewModel(
                }
            }
         }
+    }
 
+    fun goToRegisterUser(){
+        val intent = Intent(context, RegisterActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 }

@@ -19,8 +19,9 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
-        viewModel.RegisterNewUser()
+        binding.btRegister.setOnClickListener {
+            viewModel.goToRegisterUser()
+        }
 
     }
 }
