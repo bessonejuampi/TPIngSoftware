@@ -4,9 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.tpingsoftware.data.models.User
 import com.example.tpingsoftware.utils.Constants
 
-@Database(entities = [], version = 1)
+@Database(entities = [User::class], version = 1)
 abstract class AppDatabase : RoomDatabase(){
 //abstract fun estimationInputDao(): EstimationInputDAO?
 

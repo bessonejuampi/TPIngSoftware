@@ -1,6 +1,7 @@
 package com.example.tpingsoftware
 
 import android.app.Application
+import com.example.tpingsoftware.di.FirebaseModule
 import com.example.tpingsoftware.di.RepositoryModule
 import com.example.tpingsoftware.di.repository.ViewModelsModule
 import org.koin.android.ext.koin.androidContext
@@ -11,7 +12,7 @@ class AppController : Application(){
         super.onCreate()
         startKoin {
             androidContext(this@AppController)
-            modules(arrayListOf(RepositoryModule, ViewModelsModule))
+            modules(arrayListOf(RepositoryModule, ViewModelsModule, FirebaseModule))
         }
     }
 }

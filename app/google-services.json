@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "953776637892-2jbigktc8k5o0nrt884fqvkdstu44udp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tpingsoftware",
+            "certificate_hash": "fd346d42eff5835d37b8ba6eb591cefd6bdbad54"
+          }
+        },
+        {
           "client_id": "953776637892-91hqoadbqhnh2dhj8dcltk4pqraismjq.apps.googleusercontent.com",
           "client_type": 3
         }
