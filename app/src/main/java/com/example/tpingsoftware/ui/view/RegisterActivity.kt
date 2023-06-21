@@ -1,9 +1,12 @@
 package com.example.tpingsoftware.ui.view
 
+import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.lifecycle.Observer
-import com.example.tpingsoftware.R
+import com.example.tpingsoftware.utils.Dialog
 import com.example.tpingsoftware.databinding.ActivityRegisterBinding
 import com.example.tpingsoftware.ui.viewModels.RegisterViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,6 +25,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupViewModelObserver()
+        setupCleanEditText()
 
         binding.btnRegister.setOnClickListener {
             viewModel.validationUser(
@@ -29,7 +33,7 @@ class RegisterActivity : AppCompatActivity() {
                 binding.etLastName.text.toString(),
                 binding.etEmail.text.toString(),
                 binding.etPassword.text.toString(),
-                binding.etPassword1.text.toString()
+                binding.etRepeatPassword.text.toString()
             )
         }
 
@@ -52,9 +56,90 @@ class RegisterActivity : AppCompatActivity() {
                     binding.tfPassword.error = userValidator.passError
                 }
                 if (!userValidator.lastNameError.isNullOrEmpty()){
-                    binding.tfPassword1.error = userValidator.repeatPasswordError
+                    binding.tfRepeatPassword.error = userValidator.repeatPasswordError
                 }
             }
         })
+
+        viewModel.resultRegisterMutable.observe(this, Observer { result ->
+            showAlertDialog(result)
+        })
+    }
+
+    private fun setupCleanEditText() {
+
+        binding.etEmail.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                binding.tfEmail.error = null
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                // Nothing use
+            }
+            override fun afterTextChanged(p0: Editable?) {
+                // Nothing use
+            }
+        })
+
+        binding.etPassword.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                binding.tfPassword.error = null
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                // Nothing use
+            }
+            override fun afterTextChanged(p0: Editable?) {
+                // Nothing use
+            }
+        })
+
+        binding.etRepeatPassword.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                binding.tfRepeatPassword.error = null
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                // Nothing use
+            }
+            override fun afterTextChanged(p0: Editable?) {
+                // Nothing use
+            }
+        })
+
+        binding.etName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                binding.tfName.error = null
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                // Nothing use
+            }
+            override fun afterTextChanged(p0: Editable?) {
+                // Nothing use
+            }
+        })
+
+        binding.etLastName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                binding.tfLastName.error = null
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                // Nothing use
+            }
+            override fun afterTextChanged(p0: Editable?) {
+                // Nothing use
+            }
+        })
+    }
+
+    private fun showAlertDialog(dialog:Dialog){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(dialog.title)
+        builder.setMessage(dialog.description)
+        builder.setPositiveButton("Aceptar") { accept, _ ->
+            if (dialog.result == true){
+                viewModel.goToHome()
+            }
+            accept.dismiss()
+        }
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 }

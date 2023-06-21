@@ -8,7 +8,7 @@ class UserValidator() {
     var repeatPasswordError: String? = null
 
 
-    fun isSuccesully(): Boolean {
+    fun isSuccessfully(): Boolean {
         return nameError.isNullOrEmpty() && lastNameError.isNullOrEmpty() && emailError.isNullOrEmpty() &&
                 passError.isNullOrEmpty() && repeatPasswordError.isNullOrEmpty()
     }
