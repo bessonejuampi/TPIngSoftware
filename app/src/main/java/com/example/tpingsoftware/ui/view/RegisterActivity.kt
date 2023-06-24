@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import androidx.lifecycle.Observer
 import com.example.tpingsoftware.utils.Dialog
 import com.example.tpingsoftware.databinding.ActivityRegisterBinding
@@ -29,6 +30,8 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.progressBar.visibility = View.GONE
+
         setupViewModelObserver()
         setupCleanEditText()
 
@@ -41,6 +44,7 @@ class RegisterActivity : AppCompatActivity() {
                 binding.etRepeatPassword.text.toString(),
                 AppPreferences.getImageProfile(this)
             )
+           showProgress()
         }
 
         binding.ibAddImageProfile.setOnClickListener {
@@ -87,6 +91,7 @@ class RegisterActivity : AppCompatActivity() {
         })
 
         viewModel.resultRegisterMutable.observe(this, Observer { result ->
+            hideProgress()
             showAlertDialog(result)
         })
     }
@@ -168,10 +173,20 @@ class RegisterActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
-
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
+
+    private fun showProgress() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.btnRegister.visibility = View.INVISIBLE
+    }
+
+    private fun hideProgress() {
+        binding.progressBar.visibility =  View.GONE
+        binding.btnRegister.visibility = View.VISIBLE
+    }
+
 
 }
