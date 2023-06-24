@@ -8,7 +8,7 @@
     android:layout_marginTop="54dp">
 
     <LinearLayout
-
+        android:id="@+id/llLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -74,15 +74,55 @@
             android:layout_width="match_parent"
             android:layout_height="15dp" />
 
-        <Button
-            android:id="@+id/btLogin"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Entrar" />
+            android:paddingEnd="32dp"
+            android:paddingStart="32dp">
+
+            <Button
+                android:id="@+id/btLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Entrar" />
+
+            <ProgressBar
+                android:id="@+id/progressBarLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="32dp"
+            android:paddingStart="32dp">
+
+            <Button
+                android:id="@+id/btGoogle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Continuar con Google"
+                app:icon="@drawable/logo_google"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"/>
+
+            <ProgressBar
+                android:id="@+id/progressBarGoogle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/llRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -97,9 +137,9 @@
             android:text="¿No tienes una cuenta?"
             android:clickable="true"
             android:focusable="true" />
+
         <Button
             android:id="@+id/btRegister"
-            style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Registrarse"

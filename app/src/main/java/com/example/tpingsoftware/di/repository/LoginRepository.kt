@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 interface LoginRepositoryContract{
     suspend fun LogInUser(email:String, password:String): Task<AuthResult>
+
 }
 
 class LoginRepository(
