@@ -6,14 +6,14 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
 interface LoginRepositoryContract{
-    suspend fun registerNewUser(email:String, password:String): Task<AuthResult>
+    suspend fun LogInUser(email:String, password:String): Task<AuthResult>
 }
 
 class LoginRepository(
     private val auth : FirebaseAuth,
     private val context: Context
 ) : LoginRepositoryContract{
-    override suspend fun registerNewUser(email: String, password: String): Task<AuthResult> {
+    override suspend fun LogInUser(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
     }
 
