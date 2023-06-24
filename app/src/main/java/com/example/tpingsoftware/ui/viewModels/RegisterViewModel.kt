@@ -27,6 +27,7 @@ class RegisterViewModel(
 ):ViewModel() {
     var userValidationMutable = MutableLiveData<UserValidator?>()
     var resultRegisterMutable = MutableLiveData<Dialog>()
+    var showProgress = MutableLiveData<Boolean>()
 
     fun validationUser(
         name:String?,
@@ -37,6 +38,8 @@ class RegisterViewModel(
         imageProfile: String?
     ){
         var userValidator = UserValidator()
+
+        showProgress.value = true
 
         if (!name.isText()){
             userValidator.nameError = context.getString(R.string.text_input_mandatory)
@@ -65,7 +68,8 @@ class RegisterViewModel(
 
         if (userValidator.isSuccessfully()){
             registerUser(email!!, password!! ,name!!, lastName!!, imageProfile)
-
+        }else{
+            showProgress.value = false
         }
         userValidationMutable.value = userValidator
 

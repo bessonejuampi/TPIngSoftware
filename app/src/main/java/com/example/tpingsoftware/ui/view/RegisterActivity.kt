@@ -44,7 +44,7 @@ class RegisterActivity : AppCompatActivity() {
                 binding.etRepeatPassword.text.toString(),
                 AppPreferences.getImageProfile(this)
             )
-           showProgress()
+            showProgress()
         }
 
         binding.ibAddImageProfile.setOnClickListener {
@@ -94,13 +94,16 @@ class RegisterActivity : AppCompatActivity() {
             hideProgress()
             showAlertDialog(result)
         })
+
     }
 
     private fun setupCleanEditText() {
 
+
         binding.etEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfEmail.error = null
+                hideProgress()
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // Nothing use
@@ -113,6 +116,7 @@ class RegisterActivity : AppCompatActivity() {
         binding.etPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfPassword.error = null
+                hideProgress()
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // Nothing use
@@ -125,6 +129,7 @@ class RegisterActivity : AppCompatActivity() {
         binding.etRepeatPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfRepeatPassword.error = null
+                hideProgress()
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // Nothing use
@@ -137,6 +142,7 @@ class RegisterActivity : AppCompatActivity() {
         binding.etName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfName.error = null
+                hideProgress()
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // Nothing use
@@ -149,6 +155,7 @@ class RegisterActivity : AppCompatActivity() {
         binding.etLastName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfLastName.error = null
+                hideProgress()
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // Nothing use
