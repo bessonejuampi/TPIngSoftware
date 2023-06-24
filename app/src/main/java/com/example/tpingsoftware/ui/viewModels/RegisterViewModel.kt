@@ -2,20 +2,24 @@ package com.example.tpingsoftware.ui.viewModels
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tpingsoftware.R
 import com.example.tpingsoftware.di.repository.RegisterRepositoryContract
 import com.example.tpingsoftware.ui.view.HomeActivity
-import com.example.tpingsoftware.ui.view.RegisterActivity
 import com.example.tpingsoftware.utils.Dialog
 import com.example.tpingsoftware.utils.UserValidator
+import com.example.tpingsoftware.utils.Utils
 import com.example.tpingsoftware.utils.isEmail
 import com.example.tpingsoftware.utils.isText
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import android.widget.Toast
+import com.example.tpingsoftware.utils.AppPreferences
+import java.io.IOException
 
 class RegisterViewModel(
     private val repository : RegisterRepositoryContract,
@@ -29,7 +33,8 @@ class RegisterViewModel(
         lastName:String?,
         email:String?,
         password:String?,
-        repeatPassword:String?
+        repeatPassword:String?,
+        imageProfile: String?
     ){
         var userValidator = UserValidator()
 
@@ -59,7 +64,7 @@ class RegisterViewModel(
         }
 
         if (userValidator.isSuccessfully()){
-            registerUser(email!!, password!! ,name!!, lastName!!)
+            registerUser(email!!, password!! ,name!!, lastName!!, imageProfile)
 
         }
         userValidationMutable.value = userValidator
@@ -67,13 +72,13 @@ class RegisterViewModel(
     }
 
 
-    private fun registerUser(email:String, password:String, name: String, lastName: String){
+    private fun registerUser(email:String, password:String, name: String, lastName: String, imageProfile:String?){
         val dialog = Dialog()
         viewModelScope.launch {
             val result = repository.registerNewUser(email, password)
             result.addOnCompleteListener { task ->
                 if (task.isSuccessful){
-                    repository.saveUserInFireStore(name, lastName, email)
+                    repository.saveUserInFireStore(name, lastName, email, imageProfile)
                     dialog.title = "¡Felicidades!"
                     dialog.description = "Ya puedes usar tu cuenta para navegar por la app"
                     dialog.result = true
@@ -85,6 +90,31 @@ class RegisterViewModel(
                     resultRegisterMutable.value = dialog
                 }
             }
+        }
+    }
+
+    fun saveImageToInternalStorage(imageUri: Uri) {
+
+        try {
+            val contentResolver = context.contentResolver
+            val inputStream = contentResolver.openInputStream(imageUri)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            inputStream?.close()
+
+            val filename = Utils.generateRandomLettersAndNumbers()
+
+            val outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            outputStream.close()
+
+
+            AppPreferences.setImageProfile(context, filename)
+
+            Toast.makeText(context, "Imagen guardada exitosamente", Toast.LENGTH_SHORT).show()
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(context, "Error al guardar la imagen", Toast.LENGTH_SHORT).show()
         }
     }
 

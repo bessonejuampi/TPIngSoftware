@@ -10,7 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 interface RegisterRepositoryContract{
     suspend fun registerNewUser(email:String, password:String): Task<AuthResult>
     fun showAlertDialog(context:Context, title:String, description:String?)
-    fun saveUserInFireStore(name:String, lastName:String, email: String)
+    fun saveUserInFireStore(name:String, lastName:String, email: String, imageProfile:String?)
 }
 
 class RegisterRepository(
@@ -32,10 +32,10 @@ class RegisterRepository(
         alertDialog.show()
     }
 
-    override fun saveUserInFireStore(name: String, lastName: String, email: String) {
+    override fun saveUserInFireStore(name: String, lastName: String, email: String, imageProfile:String?) {
         firestore.collection("users")
             .document(email).set(
-                hashMapOf("name" to name, "lastName" to lastName)
+                hashMapOf("name" to name, "lastName" to lastName, "imageProfile" to imageProfile)
             )
     }
 

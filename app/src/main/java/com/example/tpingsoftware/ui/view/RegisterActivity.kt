@@ -1,14 +1,19 @@
 package com.example.tpingsoftware.ui.view
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.lifecycle.Observer
 import com.example.tpingsoftware.utils.Dialog
 import com.example.tpingsoftware.databinding.ActivityRegisterBinding
 import com.example.tpingsoftware.ui.viewModels.RegisterViewModel
+import com.example.tpingsoftware.utils.AppPreferences
+import com.example.tpingsoftware.utils.Constants.PICK_IMAGE_REQUEST
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity() {
@@ -33,11 +38,31 @@ class RegisterActivity : AppCompatActivity() {
                 binding.etLastName.text.toString(),
                 binding.etEmail.text.toString(),
                 binding.etPassword.text.toString(),
-                binding.etRepeatPassword.text.toString()
+                binding.etRepeatPassword.text.toString(),
+                AppPreferences.getImageProfile(this)
             )
         }
 
+        binding.ibAddImageProfile.setOnClickListener {
+            openGallery()
+        }
 
+        binding.ivProfile.setOnClickListener {
+            openGallery()
+        }
+
+
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+            val selectedImageUri = data.data
+
+            binding.ivProfile.setImageURI(selectedImageUri)
+
+            selectedImageUri?.let { viewModel.saveImageToInternalStorage(it) }
+        }
     }
 
     private fun setupViewModelObserver(){
@@ -142,4 +167,11 @@ class RegisterActivity : AppCompatActivity() {
         val alertDialog = builder.create()
         alertDialog.show()
     }
+
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
 }

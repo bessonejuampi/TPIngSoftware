@@ -2,6 +2,8 @@ package com.example.tpingsoftware.ui.viewModels
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,6 +33,7 @@ class LoginViewModel(
            }
         }
     }
+
 
     fun goToRegisterUser(){
         val intent = Intent(context, RegisterActivity::class.java)
