@@ -3,4 +3,6 @@
     <string name="text_input_mandatory">Este campo es obligatorio</string>
     <string name="text_input_format_email">Por favor, introduzca un email válido</string>
     <string name="text_repeat_password">Las contraseñas no coinsiden</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
