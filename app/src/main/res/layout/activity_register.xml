@@ -16,8 +16,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
@@ -55,14 +55,13 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tfName"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombre"
                 android:layout_marginTop="16dp"
+                android:hint="Nombre"
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -80,8 +79,8 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Apellido"
                 android:layout_marginTop="16dp"
+                android:hint="Apellido"
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -99,8 +98,8 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
                 android:layout_marginTop="16dp"
+                android:hint="Email"
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -118,8 +117,8 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Contraseña"
                 android:layout_marginTop="16dp"
+                android:hint="Contraseña"
                 app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -137,16 +136,16 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Repetír contraseña"
                 android:layout_marginTop="16dp"
+                android:hint="Repetír contraseña"
                 app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etRepeatPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:imeOptions="actionDone">
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword">
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -154,7 +153,55 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="16dp"/>
+                android:layout_height="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tfLocation"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:hint="Ubicación">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:imeOptions="actionDone"
+                        android:inputType="none">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="0dp" />
+
+                <ImageButton
+                    android:id="@+id/btnGetLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="0.8"
+                    android:background="@drawable/backgroung_btn_location"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/baseline_my_location_24" />
+
+            </LinearLayout>
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -164,7 +211,7 @@
                     android:id="@+id/btnRegister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Registrarse"/>
+                    android:text="Registrarse" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -178,7 +225,6 @@
         </LinearLayout>
 
     </ScrollView>
-
 
 
 </LinearLayout>

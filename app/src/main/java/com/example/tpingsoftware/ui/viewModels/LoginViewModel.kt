@@ -48,19 +48,22 @@ class LoginViewModel(
             val account = task.getResult(ApiException::class.java)
             if (account != null){
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-                FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { task ->
-                    if (task.isSuccessful){
-                        AppPreferences.setUserSession(context, task.result.toString())
-                        goToHome()
-                    }else{
-                        val dialog = Dialog()
-                        dialog.title = "Algo ha salido mal"
-                        dialog.description = task.exception.toString()
-                        dialog.result = false
-                        resultLogInMutable.value = dialog
+                viewModelScope.launch {
+                    repository.LogInWithGoogle(credential).addOnCompleteListener { task ->
+                        if (task.isSuccessful){
+                            AppPreferences.setUserSession(context, account.email.toString())
+                            repository.saveUserInFireStore(account.givenName.toString(), account.familyName.toString(), account.email.toString())
+                            goToHome()
+                        }else{
+                            val dialog = Dialog()
+                            dialog.title = "Algo ha salido mal"
+                            dialog.description = task.exception.toString()
+                            dialog.result = false
+                            resultLogInMutable.value = dialog
+                        }
                     }
-
                 }
+
             }
         }catch (e : ApiException){
             val dialog = Dialog()

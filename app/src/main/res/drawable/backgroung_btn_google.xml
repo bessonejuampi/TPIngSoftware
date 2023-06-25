@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#FFFFFFFF" /> <!-- Color de fondo blanco con opacidad completa -->
-    <stroke
-        android:width="3dp"
-        android:color="#808080"/> <!-- Color de borde gris -->
-    <corners android:radius="4dp" /> <!-- Radio de las esquinas del botón -->
-</shape>

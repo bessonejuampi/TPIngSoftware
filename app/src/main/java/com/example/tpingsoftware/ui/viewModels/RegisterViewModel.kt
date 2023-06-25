@@ -22,53 +22,55 @@ import com.example.tpingsoftware.utils.AppPreferences
 import java.io.IOException
 
 class RegisterViewModel(
-    private val repository : RegisterRepositoryContract,
+    private val repository: RegisterRepositoryContract,
     val context: Context
-):ViewModel() {
+) : ViewModel() {
     var userValidationMutable = MutableLiveData<UserValidator?>()
     var resultRegisterMutable = MutableLiveData<Dialog>()
     var showProgress = MutableLiveData<Boolean>()
 
     fun validationUser(
-        name:String?,
-        lastName:String?,
-        email:String?,
-        password:String?,
-        repeatPassword:String?,
-        imageProfile: String?
-    ){
+        name: String?,
+        lastName: String?,
+        email: String?,
+        password: String?,
+        repeatPassword: String?,
+        imageProfile: String?,
+        latitude: String?,
+        longitude: String?
+    ) {
         var userValidator = UserValidator()
 
         showProgress.value = true
 
-        if (!name.isText()){
+        if (!name.isText()) {
             userValidator.nameError = context.getString(R.string.text_input_mandatory)
         }
-        if (!lastName.isText()){
+        if (!lastName.isText()) {
             userValidator.lastNameError = context.getString(R.string.text_input_mandatory)
         }
-        if (email.isNullOrEmpty()){
+        if (email.isNullOrEmpty()) {
             userValidator.emailError = context.getString(R.string.text_input_mandatory)
-            if (!email.isEmail()){
+            if (!email.isEmail()) {
                 userValidator.emailError = context.getString(R.string.text_input_format_email)
             }
         }
-        if (password.isNullOrEmpty()){
+        if (password.isNullOrEmpty()) {
             userValidator.passError = context.getString(R.string.text_input_mandatory)
         }
-        if (repeatPassword.isNullOrEmpty()){
+        if (repeatPassword.isNullOrEmpty()) {
             userValidator.repeatPasswordError = context.getString(R.string.text_input_mandatory)
         }
-        if (userValidator.passError.isNullOrEmpty() && userValidator.repeatPasswordError.isNullOrEmpty()){
-            if (repeatPassword!=password){
+        if (userValidator.passError.isNullOrEmpty() && userValidator.repeatPasswordError.isNullOrEmpty()) {
+            if (repeatPassword != password) {
                 userValidator.repeatPasswordError = context.getString(R.string.text_repeat_password)
                 userValidator.passError = context.getString(R.string.text_repeat_password)
             }
         }
 
-        if (userValidator.isSuccessfully()){
-            registerUser(email!!, password!! ,name!!, lastName!!, imageProfile)
-        }else{
+        if (userValidator.isSuccessfully()) {
+            registerUser(email!!, password!!, name!!, lastName!!, imageProfile, latitude, longitude)
+        } else {
             showProgress.value = false
         }
         userValidationMutable.value = userValidator
@@ -76,18 +78,26 @@ class RegisterViewModel(
     }
 
 
-    private fun registerUser(email:String, password:String, name: String, lastName: String, imageProfile:String?){
+    private fun registerUser(
+        email: String,
+        password: String,
+        name: String,
+        lastName: String,
+        imageProfile: String?,
+        latitude: String?,
+        longitude: String?
+    ) {
         val dialog = Dialog()
         viewModelScope.launch {
             val result = repository.registerNewUser(email, password)
             result.addOnCompleteListener { task ->
-                if (task.isSuccessful){
-                    repository.saveUserInFireStore(name, lastName, email, imageProfile)
+                if (task.isSuccessful) {
+                    repository.saveUserInFireStore(name, lastName, email, imageProfile, latitude, longitude)
                     dialog.title = "¡Felicidades!"
                     dialog.description = "Ya puedes usar tu cuenta para navegar por la app"
                     dialog.result = true
                     resultRegisterMutable.value = dialog
-                }else{
+                } else {
                     dialog.title = "Algo ha salido mal"
                     dialog.description = task.exception.toString()
                     dialog.result = false
@@ -122,7 +132,7 @@ class RegisterViewModel(
         }
     }
 
-    fun goToHome(){
+    fun goToHome() {
         val intent = Intent(context, HomeActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
