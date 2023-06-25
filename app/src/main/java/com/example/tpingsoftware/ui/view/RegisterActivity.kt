@@ -30,9 +30,6 @@ class RegisterActivity : AppCompatActivity() {
 
     private val viewModel: RegisterViewModel by viewModel()
 
-    private var isAllowedLocate = false
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -70,32 +67,31 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.btnGetLocation.setOnClickListener {
 
-            if (isAllowedLocate) {
-                if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
 
-                    val locationManager =
-                        getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                    val lastKnownLocation =
-                        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                val locationManager =
+                    getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                val lastKnownLocation =
+                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 
-                    lastKnownLocation?.let {
-                        val latitude = lastKnownLocation.latitude
-                        val longitude = lastKnownLocation.longitude
+                lastKnownLocation?.let {
+                    val latitude = lastKnownLocation.latitude
+                    val longitude = lastKnownLocation.longitude
 
-                        binding.etLocation.setText(" $latitude, $longitude")
+                    binding.etLocation.setText("$latitude, $longitude")
 
-                        AppPreferences.setLocationUser(this, latitude.toString(),
-                            longitude.toString()
-                        )
-                    }
+                    AppPreferences.setLocationUser(
+                        this, latitude.toString(),
+                        longitude.toString()
+                    )
                 }
             } else {
                 var dialog = Dialog(
@@ -113,9 +109,7 @@ class RegisterActivity : AppCompatActivity() {
                 }
                 val alertDialog = builder.create()
                 alertDialog.show()
-
             }
-
 
         }
 
@@ -144,9 +138,6 @@ class RegisterActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                 grantResults[1] == PackageManager.PERMISSION_GRANTED
             ) {
-
-                isAllowedLocate = true
-
             }
         }
     }
@@ -169,7 +160,7 @@ class RegisterActivity : AppCompatActivity() {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
 
-            isAllowedLocate = true
+            //Ya existen permisos
 
         } else {
 
