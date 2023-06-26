@@ -124,7 +124,7 @@ class RegisterActivity : AppCompatActivity() {
 
             binding.ivProfile.setImageURI(selectedImageUri)
 
-            selectedImageUri?.let { viewModel.saveImageToInternalStorage(it) }
+            selectedImageUri?.let { viewModel.saveImageUserInStorage(it) }
         }
     }
 

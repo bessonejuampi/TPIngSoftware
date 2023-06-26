@@ -2,20 +2,25 @@ package com.example.tpingsoftware.di.repository
 
 import android.app.AlertDialog
 import android.content.Context
+import android.net.Uri
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 
 interface RegisterRepositoryContract{
     suspend fun registerNewUser(email:String, password:String): Task<AuthResult>
     fun showAlertDialog(context:Context, title:String, description:String?)
     fun saveUserInFireStore(name:String, lastName:String, email: String, imageProfile:String?, latitude:String?, longitude:String?)
+    fun saveUserImageInStorage(image: Uri)
 }
 
 class RegisterRepository(
     private val auth : FirebaseAuth,
     private val firestore : FirebaseFirestore,
+    private val storage : FirebaseStorage,
     private val context: Context
 ) : RegisterRepositoryContract{
     override suspend fun registerNewUser(email: String, password: String): Task<AuthResult> {
@@ -43,6 +48,10 @@ class RegisterRepository(
                     "longitude" to longitude
                 )
             )
+    }
+
+    override fun saveUserImageInStorage(image: Uri) {
+        storage.reference.child("imageProfile/${auth.uid}").putFile(image)
     }
 
 }

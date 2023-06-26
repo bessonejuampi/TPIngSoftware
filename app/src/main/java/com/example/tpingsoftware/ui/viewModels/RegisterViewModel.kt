@@ -132,6 +132,10 @@ class RegisterViewModel(
         }
     }
 
+    fun saveImageUserInStorage(image:Uri){
+        repository.saveUserImageInStorage(image)
+    }
+
     fun goToHome() {
         val intent = Intent(context, HomeActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
