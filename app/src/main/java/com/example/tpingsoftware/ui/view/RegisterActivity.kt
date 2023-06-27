@@ -30,6 +30,8 @@ class RegisterActivity : AppCompatActivity() {
 
     private val viewModel: RegisterViewModel by viewModel()
 
+    private var hasImageProfile = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,10 +51,9 @@ class RegisterActivity : AppCompatActivity() {
                 binding.etEmail.text.toString(),
                 binding.etPassword.text.toString(),
                 binding.etRepeatPassword.text.toString(),
-                AppPreferences.getImageProfile(this),
                 AppPreferences.getLatitudeUser(this),
-                AppPreferences.getLongitudeUser(this)
-
+                AppPreferences.getLongitudeUser(this),
+                hasImageProfile
             )
             showProgress()
         }
@@ -125,6 +126,8 @@ class RegisterActivity : AppCompatActivity() {
             binding.ivProfile.setImageURI(selectedImageUri)
 
             selectedImageUri?.let { viewModel.saveImageUserInStorage(it) }
+
+            hasImageProfile = true
         }
     }
 

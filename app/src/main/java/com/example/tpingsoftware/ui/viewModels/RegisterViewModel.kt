@@ -35,9 +35,9 @@ class RegisterViewModel(
         email: String?,
         password: String?,
         repeatPassword: String?,
-        imageProfile: String?,
         latitude: String?,
-        longitude: String?
+        longitude: String?,
+        hasImageProfile: Boolean
     ) {
         var userValidator = UserValidator()
 
@@ -69,7 +69,7 @@ class RegisterViewModel(
         }
 
         if (userValidator.isSuccessfully()) {
-            registerUser(email!!, password!!, name!!, lastName!!, imageProfile, latitude, longitude)
+            registerUser(email!!, password!!, name!!, lastName!!, latitude, longitude, hasImageProfile)
         } else {
             showProgress.value = false
         }
@@ -83,16 +83,16 @@ class RegisterViewModel(
         password: String,
         name: String,
         lastName: String,
-        imageProfile: String?,
         latitude: String?,
-        longitude: String?
+        longitude: String?,
+        hasImageProfile : Boolean
     ) {
         val dialog = Dialog()
         viewModelScope.launch {
             val result = repository.registerNewUser(email, password)
             result.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    repository.saveUserInFireStore(name, lastName, email, imageProfile, latitude, longitude)
+                    repository.saveUserInFireStore(name, lastName, email, latitude, longitude, hasImageProfile)
                     dialog.title = "¡Felicidades!"
                     dialog.description = "Ya puedes usar tu cuenta para navegar por la app"
                     dialog.result = true
@@ -133,6 +133,7 @@ class RegisterViewModel(
     }
 
     fun saveImageUserInStorage(image:Uri){
+
         repository.saveUserImageInStorage(image)
     }
 

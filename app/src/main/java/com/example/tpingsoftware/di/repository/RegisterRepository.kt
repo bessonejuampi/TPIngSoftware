@@ -10,19 +10,27 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 
-interface RegisterRepositoryContract{
-    suspend fun registerNewUser(email:String, password:String): Task<AuthResult>
-    fun showAlertDialog(context:Context, title:String, description:String?)
-    fun saveUserInFireStore(name:String, lastName:String, email: String, imageProfile:String?, latitude:String?, longitude:String?)
+interface RegisterRepositoryContract {
+    suspend fun registerNewUser(email: String, password: String): Task<AuthResult>
+    fun showAlertDialog(context: Context, title: String, description: String?)
+    fun saveUserInFireStore(
+        name: String,
+        lastName: String,
+        email: String,
+        latitude: String?,
+        longitude: String?,
+        hasImageProfile: Boolean
+    )
+
     fun saveUserImageInStorage(image: Uri)
 }
 
 class RegisterRepository(
-    private val auth : FirebaseAuth,
-    private val firestore : FirebaseFirestore,
-    private val storage : FirebaseStorage,
+    private val auth: FirebaseAuth,
+    private val firestore: FirebaseFirestore,
+    private val storage: FirebaseStorage,
     private val context: Context
-) : RegisterRepositoryContract{
+) : RegisterRepositoryContract {
     override suspend fun registerNewUser(email: String, password: String): Task<AuthResult> {
         return auth.createUserWithEmailAndPassword(email, password)
     }
@@ -30,22 +38,29 @@ class RegisterRepository(
     override fun showAlertDialog(context: Context, title: String, description: String?) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(title)
-        if (!description.isNullOrEmpty()){
+        if (!description.isNullOrEmpty()) {
             builder.setMessage(description)
         }
         val alertDialog = builder.create()
         alertDialog.show()
     }
 
-    override fun saveUserInFireStore(name: String, lastName: String, email: String, imageProfile:String?, latitude:String?, longitude:String?) {
+    override fun saveUserInFireStore(
+        name: String,
+        lastName: String,
+        email: String,
+        latitude: String?,
+        longitude: String?,
+        hasImageProfile: Boolean
+    ) {
         firestore.collection("users")
             .document(email).set(
                 hashMapOf(
                     "name" to name,
                     "lastName" to lastName,
-                    "imageProfile" to imageProfile,
                     "latitude" to latitude,
-                    "longitude" to longitude
+                    "longitude" to longitude,
+                    "hasImageProfile" to hasImageProfile
                 )
             )
     }
@@ -53,5 +68,4 @@ class RegisterRepository(
     override fun saveUserImageInStorage(image: Uri) {
         storage.reference.child("imageProfile/${auth.uid}").putFile(image)
     }
-
 }
