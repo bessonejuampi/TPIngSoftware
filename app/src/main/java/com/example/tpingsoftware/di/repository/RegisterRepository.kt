@@ -23,6 +23,9 @@ interface RegisterRepositoryContract {
     )
 
     fun saveUserImageInStorage(image: Uri)
+    fun sendEmailVerification():Task<Void>?
+    fun isEmailVerified():Boolean
+
 }
 
 class RegisterRepository(
@@ -67,5 +70,13 @@ class RegisterRepository(
 
     override fun saveUserImageInStorage(image: Uri) {
         storage.reference.child("imageProfile/${auth.uid}").putFile(image)
+    }
+
+    override fun sendEmailVerification(): Task<Void>? {
+       return auth.currentUser?.sendEmailVerification()
+    }
+
+    override fun isEmailVerified(): Boolean {
+        return auth.currentUser!!.isEmailVerified
     }
 }

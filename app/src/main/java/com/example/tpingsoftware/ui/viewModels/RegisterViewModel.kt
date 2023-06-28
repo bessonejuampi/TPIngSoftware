@@ -18,12 +18,15 @@ import com.example.tpingsoftware.utils.isEmail
 import com.example.tpingsoftware.utils.isText
 import kotlinx.coroutines.launch
 import android.widget.Toast
+import com.example.tpingsoftware.ui.view.LoginActivity
 import com.example.tpingsoftware.utils.AppPreferences
+import com.example.tpingsoftware.utils.TypeDialog
 import java.io.IOException
 
 class RegisterViewModel(
     private val repository: RegisterRepositoryContract,
     val context: Context
+
 ) : ViewModel() {
     var userValidationMutable = MutableLiveData<UserValidator?>()
     var resultRegisterMutable = MutableLiveData<Dialog>()
@@ -69,7 +72,15 @@ class RegisterViewModel(
         }
 
         if (userValidator.isSuccessfully()) {
-            registerUser(email!!, password!!, name!!, lastName!!, latitude, longitude, hasImageProfile)
+            registerUser(
+                email!!,
+                password!!,
+                name!!,
+                lastName!!,
+                latitude,
+                longitude,
+                hasImageProfile
+            )
         } else {
             showProgress.value = false
         }
@@ -85,60 +96,62 @@ class RegisterViewModel(
         lastName: String,
         latitude: String?,
         longitude: String?,
-        hasImageProfile : Boolean
+        hasImageProfile: Boolean
     ) {
         val dialog = Dialog()
+
         viewModelScope.launch {
             val result = repository.registerNewUser(email, password)
             result.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    repository.saveUserInFireStore(name, lastName, email, latitude, longitude, hasImageProfile)
-                    dialog.title = "¡Felicidades!"
-                    dialog.description = "Ya puedes usar tu cuenta para navegar por la app"
-                    dialog.result = true
-                    resultRegisterMutable.value = dialog
+                    repository.sendEmailVerification()?.addOnCompleteListener {
+                        resultRegisterMutable.value = dialog
+                        saveUserInFirebaseFirestore(email, name, lastName, latitude, longitude, hasImageProfile)
+
+                    }?.addOnFailureListener {
+                        Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+                    }
+
+
                 } else {
                     dialog.title = "Algo ha salido mal"
                     dialog.description = task.exception.toString()
-                    dialog.result = false
+                    dialog.result = TypeDialog.DISMISS
                     resultRegisterMutable.value = dialog
                 }
             }
+                .addOnCompleteListener { task ->
+                    if (task.isComplete){
+
+                    }
+                }
         }
     }
 
-    fun saveImageToInternalStorage(imageUri: Uri) {
-
-        try {
-            val contentResolver = context.contentResolver
-            val inputStream = contentResolver.openInputStream(imageUri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            inputStream?.close()
-
-            val filename = Utils.generateRandomLettersAndNumbers()
-
-            val outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            outputStream.close()
-
-
-            AppPreferences.setImageProfile(context, filename)
-
-            Toast.makeText(context, "Imagen guardada exitosamente", Toast.LENGTH_SHORT).show()
-
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Toast.makeText(context, "Error al guardar la imagen", Toast.LENGTH_SHORT).show()
-        }
+    private fun saveUserInFirebaseFirestore(
+        email: String,
+        name: String,
+        lastName: String,
+        latitude: String?,
+        longitude: String?,
+        hasImageProfile: Boolean
+    ) {
+        repository.saveUserInFireStore(name, lastName, email, latitude, longitude, hasImageProfile)
+        val dialog = Dialog()
+        dialog.title = "¡Felicidades!, un paso mas..."
+        dialog.description = "Valida tu cuenta con el link que recibiras en en Email ingresado, luego podras usar tus datos para ingresar a la app"
+        dialog.result = TypeDialog.GO_TO_HOME
+        resultRegisterMutable.value = dialog
     }
 
-    fun saveImageUserInStorage(image:Uri){
+
+    fun saveImageUserInStorage(image: Uri) {
 
         repository.saveUserImageInStorage(image)
     }
 
-    fun goToHome() {
-        val intent = Intent(context, HomeActivity::class.java)
+    fun goToLogin(){
+        val intent = Intent(context, LoginActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
