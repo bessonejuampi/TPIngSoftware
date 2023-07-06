@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import androidx.core.content.ContextCompat
+import com.example.tpingsoftware.utils.TypeDialog
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -284,8 +285,8 @@ class RegisterActivity : AppCompatActivity() {
         builder.setTitle(dialog.title)
         builder.setMessage(dialog.description)
         builder.setPositiveButton("Aceptar") { accept, _ ->
-            if (dialog.result == true) {
-                viewModel.goToHome()
+            if (dialog.result == TypeDialog.GO_TO_HOME) {
+                viewModel.goToLogin()
             }
             accept.dismiss()
         }

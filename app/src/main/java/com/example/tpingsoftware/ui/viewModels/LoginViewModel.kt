@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tpingsoftware.di.repository.LoginRepositoryContract
 import com.example.tpingsoftware.ui.view.HomeActivity
+import com.example.tpingsoftware.ui.view.LoginActivity
 import com.example.tpingsoftware.ui.view.RegisterActivity
 import com.example.tpingsoftware.utils.AppPreferences
 import com.example.tpingsoftware.utils.Dialog
+import com.example.tpingsoftware.utils.TypeDialog
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
@@ -30,13 +32,22 @@ class LoginViewModel(
             val result = repository.LogInUser(email, password)
            result.addOnCompleteListener { task ->
                if (task.isSuccessful) {
-                   AppPreferences.setUserSession(context,email)
-                   goToHome()
+                   if (repository.isEmailVerified()){
+                       AppPreferences.setUserSession(context,email)
+                       goToHome()
+                   }else{
+                       val dialog = Dialog()
+                       dialog.title = "Algo ha salido mal"
+                       dialog.description = "Por favor verifique su Email mediante el link que ha recibidio"
+                       dialog.result = TypeDialog.DISMISS
+                       resultLogInMutable.value = dialog
+                   }
+
                } else {
                    val dialog = Dialog()
                    dialog.title = "Algo ha salido mal"
                    dialog.description = task.exception.toString()
-                   dialog.result = false
+                   dialog.result = TypeDialog.DISMISS
                    resultLogInMutable.value = dialog
                }
            }
@@ -58,7 +69,7 @@ class LoginViewModel(
                             val dialog = Dialog()
                             dialog.title = "Algo ha salido mal"
                             dialog.description = task.exception.toString()
-                            dialog.result = false
+                            dialog.result = TypeDialog.DISMISS
                             resultLogInMutable.value = dialog
                         }
                     }
@@ -69,7 +80,7 @@ class LoginViewModel(
             val dialog = Dialog()
             dialog.title = "Algo ha salido mal"
             dialog.description = task.exception.toString()
-            dialog.result = false
+            dialog.result = TypeDialog.DISMISS
             resultLogInMutable.value = dialog
         }
     }

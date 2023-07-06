@@ -14,6 +14,7 @@ import com.example.tpingsoftware.ui.viewModels.LoginViewModel
 import com.example.tpingsoftware.utils.AppPreferences
 import com.example.tpingsoftware.utils.Constants.GOOGLE_SING_IN
 import com.example.tpingsoftware.utils.Dialog
+import com.example.tpingsoftware.utils.TypeDialog
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -81,11 +82,6 @@ class LoginActivity : AppCompatActivity() {
         if (requestCode == GOOGLE_SING_IN){
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             viewModel.LoginWithGoogle(task)
-
-
-
-
-
         }
     }
 
@@ -140,10 +136,21 @@ class LoginActivity : AppCompatActivity() {
         builder.setTitle(dialog.title)
         builder.setMessage(dialog.description)
         builder.setPositiveButton("Aceptar") { accept, _ ->
-            if (dialog.result == true){
-                viewModel.goToHome()
+            when(dialog.result){
+                TypeDialog.GO_TO_HOME -> {
+                    viewModel.goToHome()
+                    accept.dismiss()
+                }
+
+                TypeDialog.ON_HOLD -> {
+                    accept.dismiss()
+                }
+
+                else -> {
+                    accept.dismiss()
+                }
             }
-            accept.dismiss()
+
         }
         val alertDialog = builder.create()
         alertDialog.show()

@@ -14,6 +14,8 @@ interface LoginRepositoryContract{
 
     fun saveUserInFireStore(name:String, lastName:String, email: String)
 
+    fun isEmailVerified():Boolean
+
 }
 
 class LoginRepository(
@@ -34,6 +36,10 @@ class LoginRepository(
             .document(email).set(
                 hashMapOf("name" to name, "lastName" to lastName)
             )
+    }
+
+    override fun isEmailVerified(): Boolean {
+        return auth.currentUser!!.isEmailVerified
     }
 
 }
