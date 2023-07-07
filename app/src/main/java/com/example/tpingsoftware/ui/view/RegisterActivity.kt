@@ -106,7 +106,9 @@ class RegisterActivity : AppCompatActivity() {
         listLocalities.forEach {
             items.add(it.municipality.name)
         }
-        val adapter = ArrayAdapter(this, R.layout.list_items_localities, items)
+        val cleanItems = items.distinct()
+        val sortedItems = cleanItems.sortedBy { it }
+        val adapter = ArrayAdapter(this, R.layout.list_items_localities, sortedItems)
         (binding.tfLocalities.editText as? AutoCompleteTextView)?.setAdapter(adapter)
     }
 
