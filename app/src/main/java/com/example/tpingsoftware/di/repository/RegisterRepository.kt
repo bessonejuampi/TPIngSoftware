@@ -104,7 +104,9 @@ class RegisterRepository(
             val numberOfLocalities =  listLocalitiesFirstResponse.body()?.total
             val secondResponse = apiClient.getLocalities(idProvince, numberOfLocalities!!)
             secondResponse.body()?.localities?.forEach { location ->
-                listLocalities.add(location)
+                if (location.municipality.id != 0){
+                    listLocalities.add(location)
+                }
             }
         }
         return listLocalities

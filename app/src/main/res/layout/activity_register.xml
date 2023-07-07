@@ -134,8 +134,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/actvLocalities"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"/>
+                    android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
