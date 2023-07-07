@@ -18,6 +18,8 @@ import com.example.tpingsoftware.utils.isEmail
 import com.example.tpingsoftware.utils.isText
 import kotlinx.coroutines.launch
 import android.widget.Toast
+import com.example.tpingsoftware.data.models.Location
+import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.ui.view.LoginActivity
 import com.example.tpingsoftware.utils.AppPreferences
 import com.example.tpingsoftware.utils.TypeDialog
@@ -31,6 +33,8 @@ class RegisterViewModel(
     var userValidationMutable = MutableLiveData<UserValidator?>()
     var resultRegisterMutable = MutableLiveData<Dialog>()
     var showProgress = MutableLiveData<Boolean>()
+    var listProvincesMutable = MutableLiveData<ArrayList<Province>>()
+    var listLocalitiesMutable = MutableLiveData<ArrayList<Location>>()
 
     fun validationUser(
         name: String?,
@@ -150,6 +154,23 @@ class RegisterViewModel(
         repository.saveUserImageInStorage(image)
     }
 
+    fun getProvinces(){
+        viewModelScope.launch {
+            val listProvinces = repository.getProvinces()
+            if (!listProvinces.isNullOrEmpty()){
+                listProvincesMutable.value = listProvinces
+            }
+        }
+    }
+
+    fun getLocalities(idProvince : Int){
+        viewModelScope.launch {
+            val listLocalities = repository.getLocalities(idProvince)
+            if (!listLocalities.isNullOrEmpty()){
+                listLocalitiesMutable.value = listLocalities
+            }
+        }
+    }
     fun goToLogin(){
         val intent = Intent(context, LoginActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

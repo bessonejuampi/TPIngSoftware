@@ -111,6 +111,34 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tfProvince"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Provincia">
+
+                <AutoCompleteTextView
+                    android:id="@+id/actvProvince"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tfLocalities"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Localidades">
+
+                <AutoCompleteTextView
+                    android:id="@+id/actvLocalities"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tfPassword"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
@@ -148,54 +176,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tfLocation"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:hint="Ubicación">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etLocation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:imeOptions="actionDone"
-                        android:inputType="none">
-
-                    </com.google.android.material.textfield.TextInputEditText>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <Space
-                    android:layout_width="8dp"
-                    android:layout_height="0dp" />
-
-                <ImageButton
-                    android:id="@+id/btnGetLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="0.8"
-                    android:background="@drawable/backgroung_btn_location"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/baseline_my_location_24" />
-
-            </LinearLayout>
-
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
@@ -209,7 +189,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Registrarse"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"

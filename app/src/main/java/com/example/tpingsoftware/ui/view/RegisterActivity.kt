@@ -18,10 +18,14 @@ import com.example.tpingsoftware.utils.AppPreferences
 import com.example.tpingsoftware.utils.Constants.PICK_IMAGE_REQUEST
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
-import android.location.LocationManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.core.content.ContextCompat
+import com.example.tpingsoftware.R
+import com.example.tpingsoftware.data.models.Location
+import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.utils.TypeDialog
 
 
@@ -32,6 +36,8 @@ class RegisterActivity : AppCompatActivity() {
     private val viewModel: RegisterViewModel by viewModel()
 
     private var hasImageProfile = false
+
+    var provinces : ArrayList<Province>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +50,9 @@ class RegisterActivity : AppCompatActivity() {
         setupViewModelObserver()
         setupCleanEditText()
         requestPermissionLocation()
+
+
+        viewModel.getProvinces()
 
         binding.btnRegister.setOnClickListener {
             viewModel.validationUser(
@@ -67,56 +76,40 @@ class RegisterActivity : AppCompatActivity() {
             openGallery()
         }
 
-        binding.btnGetLocation.setOnClickListener {
-
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-
-                val locationManager =
-                    getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                val lastKnownLocation =
-                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-
-                lastKnownLocation?.let {
-                    val latitude = lastKnownLocation.latitude
-                    val longitude = lastKnownLocation.longitude
-
-                    binding.etLocation.setText("$latitude, $longitude")
-
-                    AppPreferences.setLocationUser(
-                        this, latitude.toString(),
-                        longitude.toString()
-                    )
+        binding.actvProvince.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            val selectedOption = parent.getItemAtPosition(position).toString()
+            if (provinces != null){
+                provinces?.forEach { province ->
+                    if (selectedOption == province.name){
+                        viewModel.getLocalities(province.id)
+                    }
                 }
-            } else {
-                var dialog = Dialog(
-                    "Permisos Requeridos",
-                    "Se necesita su permiso para accedar al GPS del dispositivo"
-                )
-
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle(dialog.title)
-                builder.setMessage(dialog.description)
-                builder.setPositiveButton("Aceptar") { accept, _ ->
-
-                    requestPermissionLocation()
-                    accept.dismiss()
-                }
-                val alertDialog = builder.create()
-                alertDialog.show()
             }
+        }
+    }
 
+    private fun setProvincesExposedDropdownMenu(listProvinces:ArrayList<Province>) {
+        val items = arrayListOf<String>()
+        listProvinces.forEach {
+            items.add(it.name)
         }
 
+        provinces = listProvinces
+        val adapter = ArrayAdapter(this, R.layout.list_items_provinces, items)
+        (binding.tfProvince.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
     }
+
+
+    private fun setLocalitiesExposedDropdownMenu(listLocalities:ArrayList<Location>) {
+        val items = arrayListOf<String>()
+        listLocalities.forEach {
+            items.add(it.municipality.name)
+        }
+        val adapter = ArrayAdapter(this, R.layout.list_items_localities, items)
+        (binding.tfLocalities.editText as? AutoCompleteTextView)?.setAdapter(adapter)
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -197,6 +190,14 @@ class RegisterActivity : AppCompatActivity() {
         viewModel.resultRegisterMutable.observe(this, Observer { result ->
             hideProgress()
             showAlertDialog(result)
+        })
+
+        viewModel.listProvincesMutable.observe(this, Observer { provinces ->
+            setProvincesExposedDropdownMenu(provinces)
+        })
+
+        viewModel.listLocalitiesMutable.observe(this, Observer { localities ->
+            setLocalitiesExposedDropdownMenu(localities)
         })
 
     }
