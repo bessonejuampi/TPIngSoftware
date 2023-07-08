@@ -20,8 +20,9 @@ interface RegisterRepositoryContract {
         name: String,
         lastName: String,
         email: String,
-        latitude: String?,
-        longitude: String?,
+        province: String?,
+        location: String?,
+        address: String?,
         hasImageProfile: Boolean
     )
 
@@ -58,8 +59,9 @@ class RegisterRepository(
         name: String,
         lastName: String,
         email: String,
-        latitude: String?,
-        longitude: String?,
+        province: String?,
+        loaction: String?,
+        address: String?,
         hasImageProfile: Boolean
     ) {
         firestore.collection("users")
@@ -67,8 +69,9 @@ class RegisterRepository(
                 hashMapOf(
                     "name" to name,
                     "lastName" to lastName,
-                    "latitude" to latitude,
-                    "longitude" to longitude,
+                    "province" to province,
+                    "location" to loaction,
+                    "address" to address,
                     "hasImageProfile" to hasImageProfile
                 )
             )

@@ -19,6 +19,12 @@ fun String?.isText(): Boolean {
     return !this.isNullOrEmpty()
 }
 
+fun String?.isAddress():Boolean {
+
+    val addressRegexExpression = Regex("^[a-zA-Z]+ [0-9]+$")
+    return addressRegexExpression.matches(this.toString())
+}
+
 fun String?.isEmail():Boolean{
-    return !this.isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
+    return Patterns.EMAIL_ADDRESS.matcher(this.toString()).matches()
 }

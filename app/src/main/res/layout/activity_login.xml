@@ -65,9 +65,13 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
+            android:id="@+id/tvforgottenpassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="¿Has olvidado tu contraseña?"
+            android:layout_marginEnd="16dp"
+            android:paddingTop="5dp"
+            android:layout_gravity="end"
             android:clickable="true"
             android:focusable="true" />
         <Space
@@ -131,7 +135,6 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/tvforgottenpassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="¿No tienes una cuenta?"

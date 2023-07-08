@@ -2,6 +2,8 @@ package com.example.tpingsoftware.di
 
 import android.content.Context
 import com.example.tpingsoftware.data.network.ApiClient
+import com.example.tpingsoftware.di.repository.ForgotPasswordContract
+import com.example.tpingsoftware.di.repository.ForgotPasswordRepository
 import com.example.tpingsoftware.di.repository.LoginRepository
 import com.example.tpingsoftware.di.repository.LoginRepositoryContract
 import com.example.tpingsoftware.di.repository.RegisterRepository
@@ -25,6 +27,7 @@ import javax.inject.Singleton
 val RepositoryModule = module {
     factory<LoginRepositoryContract> { LoginRepository(get(), get() ,androidContext()) }
     factory<RegisterRepositoryContract> { RegisterRepository(get(), get(), get(), get(), androidContext()) }
+    factory<ForgotPasswordContract> { ForgotPasswordRepository(get()) }
 }
 
 val FirebaseModule = module {

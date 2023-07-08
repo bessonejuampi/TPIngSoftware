@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tpingsoftware.di.repository.LoginRepositoryContract
+import com.example.tpingsoftware.ui.view.ForgotPasswordActivity
 import com.example.tpingsoftware.ui.view.HomeActivity
 import com.example.tpingsoftware.ui.view.LoginActivity
 import com.example.tpingsoftware.ui.view.RegisterActivity
@@ -46,7 +47,7 @@ class LoginViewModel(
                } else {
                    val dialog = Dialog()
                    dialog.title = "Algo ha salido mal"
-                   dialog.description = task.exception.toString()
+                   dialog.description = task.exception!!.message.toString()
                    dialog.result = TypeDialog.DISMISS
                    resultLogInMutable.value = dialog
                }
@@ -68,7 +69,7 @@ class LoginViewModel(
                         }else{
                             val dialog = Dialog()
                             dialog.title = "Algo ha salido mal"
-                            dialog.description = task.exception.toString()
+                            dialog.description = task.exception!!.message.toString()
                             dialog.result = TypeDialog.DISMISS
                             resultLogInMutable.value = dialog
                         }
@@ -79,7 +80,7 @@ class LoginViewModel(
         }catch (e : ApiException){
             val dialog = Dialog()
             dialog.title = "Algo ha salido mal"
-            dialog.description = task.exception.toString()
+            dialog.description = task.exception!!.message.toString()
             dialog.result = TypeDialog.DISMISS
             resultLogInMutable.value = dialog
         }
@@ -94,6 +95,12 @@ class LoginViewModel(
 
     fun goToHome(){
         val intent = Intent(context, HomeActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
+    fun goToForgotPassword(){
+        val intent = Intent(context, ForgotPasswordActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }

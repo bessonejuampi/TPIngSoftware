@@ -43,6 +43,10 @@ class LoginActivity : AppCompatActivity() {
             viewModel.goToRegisterUser()
         }
 
+        binding.tvforgottenpassword.setOnClickListener {
+            viewModel.goToForgotPassword()
+        }
+
         binding.btLogin.setOnClickListener {
             viewModel.LogIn(
                 binding.etEmail.text.toString(),

@@ -39,6 +39,9 @@ class RegisterActivity : AppCompatActivity() {
 
     var provinces : ArrayList<Province>? = null
 
+    private var provinceSelected : String? = null
+    private var locationSelected : String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -61,8 +64,9 @@ class RegisterActivity : AppCompatActivity() {
                 binding.etEmail.text.toString(),
                 binding.etPassword.text.toString(),
                 binding.etRepeatPassword.text.toString(),
-                AppPreferences.getLatitudeUser(this),
-                AppPreferences.getLongitudeUser(this),
+                provinceSelected,
+                locationSelected,
+                binding.etAddress.text.toString(),
                 hasImageProfile
             )
             showProgress()
@@ -78,6 +82,7 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.actvProvince.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val selectedOption = parent.getItemAtPosition(position).toString()
+            provinceSelected = selectedOption
             if (provinces != null){
                 provinces?.forEach { province ->
                     if (selectedOption == province.name){
@@ -85,6 +90,10 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        binding.actvLocalities.onItemClickListener = AdapterView.OnItemClickListener{ parent, view, position, id ->
+            locationSelected = parent.getItemAtPosition(position).toString()
         }
     }
 
@@ -180,6 +189,15 @@ class RegisterActivity : AppCompatActivity() {
                 if (!userValidator.emailError.isNullOrEmpty()) {
                     binding.tfEmail.error = userValidator.emailError
                 }
+                if (!userValidator.provinceError.isNullOrEmpty()) {
+                    binding.tfProvince.error = userValidator.provinceError
+                }
+                if (!userValidator.locationError.isNullOrEmpty()) {
+                    binding.tfLocalities.error = userValidator.locationError
+                }
+                if (!userValidator.addressError.isNullOrEmpty()) {
+                    binding.tfAddress.error = userValidator.addressError
+                }
                 if (!userValidator.passError.isNullOrEmpty()) {
                     binding.tfPassword.error = userValidator.passError
                 }
@@ -270,6 +288,51 @@ class RegisterActivity : AppCompatActivity() {
         binding.etLastName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfLastName.error = null
+                hideProgress()
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                // Nothing use
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                // Nothing use
+            }
+        })
+
+        binding.etAddress.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                binding.tfAddress.error = null
+                hideProgress()
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                // Nothing use
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                // Nothing use
+            }
+        })
+
+        binding.actvLocalities.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                binding.tfLocalities.error = null
+                hideProgress()
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                // Nothing use
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                // Nothing use
+            }
+        })
+
+        binding.actvProvince.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                binding.tfProvince.error = null
                 hideProgress()
             }
 

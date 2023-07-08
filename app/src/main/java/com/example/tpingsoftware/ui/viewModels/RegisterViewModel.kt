@@ -23,6 +23,7 @@ import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.ui.view.LoginActivity
 import com.example.tpingsoftware.utils.AppPreferences
 import com.example.tpingsoftware.utils.TypeDialog
+import com.example.tpingsoftware.utils.isAddress
 import java.io.IOException
 
 class RegisterViewModel(
@@ -42,8 +43,9 @@ class RegisterViewModel(
         email: String?,
         password: String?,
         repeatPassword: String?,
-        latitude: String?,
-        longitude: String?,
+        province:String?,
+        location:String?,
+        address:String?,
         hasImageProfile: Boolean
     ) {
         var userValidator = UserValidator()
@@ -58,9 +60,27 @@ class RegisterViewModel(
         }
         if (email.isNullOrEmpty()) {
             userValidator.emailError = context.getString(R.string.text_input_mandatory)
+        }else {
             if (!email.isEmail()) {
                 userValidator.emailError = context.getString(R.string.text_input_format_email)
             }
+        }
+        if (!province.isText()){
+            userValidator.provinceError = context.getString(R.string.text_input_mandatory)
+        }
+        if (!location.isText()){
+            userValidator.locationError = context.getString(R.string.text_input_mandatory)
+        }
+
+        if (address.isNullOrEmpty()){
+            userValidator.addressError = context.getString(R.string.text_input_mandatory)
+        }else{
+            if (!address.isAddress()){
+                userValidator.addressError = "Por favor, introduzca una driección válida"
+            }
+        }
+        if (!address.isAddress()){
+            userValidator.addressError = context.getString(R.string.text_input_mandatory)
         }
         if (password.isNullOrEmpty()) {
             userValidator.passError = context.getString(R.string.text_input_mandatory)
@@ -81,8 +101,9 @@ class RegisterViewModel(
                 password!!,
                 name!!,
                 lastName!!,
-                latitude,
-                longitude,
+                province,
+                location,
+                address,
                 hasImageProfile
             )
         } else {
@@ -98,8 +119,9 @@ class RegisterViewModel(
         password: String,
         name: String,
         lastName: String,
-        latitude: String?,
-        longitude: String?,
+        province: String?,
+        location: String?,
+        address: String?,
         hasImageProfile: Boolean
     ) {
         val dialog = Dialog()
@@ -110,7 +132,7 @@ class RegisterViewModel(
                 if (task.isSuccessful) {
                     repository.sendEmailVerification()?.addOnCompleteListener {
                         resultRegisterMutable.value = dialog
-                        saveUserInFirebaseFirestore(email, name, lastName, latitude, longitude, hasImageProfile)
+                        saveUserInFirebaseFirestore(email, name, lastName, province, location, address, hasImageProfile)
 
                     }?.addOnFailureListener {
                         Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
@@ -119,7 +141,7 @@ class RegisterViewModel(
 
                 } else {
                     dialog.title = "Algo ha salido mal"
-                    dialog.description = task.exception.toString()
+                    dialog.description = task.exception!!.message.toString()
                     dialog.result = TypeDialog.DISMISS
                     resultRegisterMutable.value = dialog
                 }
@@ -136,11 +158,12 @@ class RegisterViewModel(
         email: String,
         name: String,
         lastName: String,
-        latitude: String?,
-        longitude: String?,
+        province: String?,
+        location: String?,
+        address: String?,
         hasImageProfile: Boolean
     ) {
-        repository.saveUserInFireStore(name, lastName, email, latitude, longitude, hasImageProfile)
+        repository.saveUserInFireStore(name, lastName, email, province, location,address, hasImageProfile)
         val dialog = Dialog()
         dialog.title = "¡Felicidades!, un paso mas..."
         dialog.description = "Valida tu cuenta con el link que recibiras en en Email ingresado, luego podras usar tus datos para ingresar a la app"
