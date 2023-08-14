@@ -46,7 +46,8 @@ class RegisterViewModel(
         province:String?,
         location:String?,
         address:String?,
-        hasImageProfile: Boolean
+        hasImageProfile: Boolean,
+        idImage: String?
     ) {
         var userValidator = UserValidator()
 
@@ -104,7 +105,8 @@ class RegisterViewModel(
                 province,
                 location,
                 address,
-                hasImageProfile
+                hasImageProfile,
+                idImage
             )
         } else {
             showProgress.value = false
@@ -122,7 +124,8 @@ class RegisterViewModel(
         province: String?,
         location: String?,
         address: String?,
-        hasImageProfile: Boolean
+        hasImageProfile: Boolean,
+        idImage: String?
     ) {
         val dialog = Dialog()
 
@@ -132,7 +135,7 @@ class RegisterViewModel(
                 if (task.isSuccessful) {
                     repository.sendEmailVerification()?.addOnCompleteListener {
                         resultRegisterMutable.value = dialog
-                        saveUserInFirebaseFirestore(email, name, lastName, province, location, address, hasImageProfile)
+                        saveUserInFirebaseFirestore(email, name, lastName, province, location, address, hasImageProfile, idImage)
 
                     }?.addOnFailureListener {
                         Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
@@ -161,9 +164,10 @@ class RegisterViewModel(
         province: String?,
         location: String?,
         address: String?,
-        hasImageProfile: Boolean
+        hasImageProfile: Boolean,
+        idImage:String?
     ) {
-        repository.saveUserInFireStore(name, lastName, email, province, location,address, hasImageProfile)
+        repository.saveUserInFireStore(name, lastName, email, province, location,address, hasImageProfile, idImage)
         val dialog = Dialog()
         dialog.title = "¡Felicidades!, un paso mas..."
         dialog.description = "Valida tu cuenta con el link que recibiras en en Email ingresado, luego podras usar tus datos para ingresar a la app"
@@ -172,9 +176,9 @@ class RegisterViewModel(
     }
 
 
-    fun saveImageUserInStorage(image: Uri) {
+    fun saveImageUserInStorage(image: Uri ,id:String) {
 
-        repository.saveUserImageInStorage(image)
+        repository.saveUserImageInStorage(image, id)
     }
 
     fun getProvinces(){

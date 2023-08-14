@@ -23,10 +23,11 @@ interface RegisterRepositoryContract {
         province: String?,
         location: String?,
         address: String?,
-        hasImageProfile: Boolean
+        hasImageProfile: Boolean,
+        idImage:String?
     )
 
-    fun saveUserImageInStorage(image: Uri)
+    fun saveUserImageInStorage(image: Uri, id:String)
     fun sendEmailVerification():Task<Void>?
     fun isEmailVerified():Boolean
     suspend fun getProvinces(): ArrayList<Province>
@@ -62,7 +63,8 @@ class RegisterRepository(
         province: String?,
         loaction: String?,
         address: String?,
-        hasImageProfile: Boolean
+        hasImageProfile: Boolean,
+        idImage:String?
     ) {
         firestore.collection("users")
             .document(email).set(
@@ -72,13 +74,14 @@ class RegisterRepository(
                     "province" to province,
                     "location" to loaction,
                     "address" to address,
-                    "hasImageProfile" to hasImageProfile
+                    "hasImageProfile" to hasImageProfile,
+                    "idImage" to idImage
                 )
             )
     }
 
-    override fun saveUserImageInStorage(image: Uri) {
-        storage.reference.child("imageProfile/${auth.uid}").putFile(image)
+    override fun saveUserImageInStorage(image: Uri, id:String) {
+        storage.reference.child("imageProfile/${id}").putFile(image)
     }
 
     override fun sendEmailVerification(): Task<Void>? {

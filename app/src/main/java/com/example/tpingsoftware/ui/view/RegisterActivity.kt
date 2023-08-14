@@ -36,6 +36,7 @@ class RegisterActivity : AppCompatActivity() {
     private val viewModel: RegisterViewModel by viewModel()
 
     private var hasImageProfile = false
+    private var idImage = ""
 
     var provinces : ArrayList<Province>? = null
 
@@ -52,7 +53,6 @@ class RegisterActivity : AppCompatActivity() {
 
         setupViewModelObserver()
         setupCleanEditText()
-        requestPermissionLocation()
 
 
         viewModel.getProvinces()
@@ -67,7 +67,8 @@ class RegisterActivity : AppCompatActivity() {
                 provinceSelected,
                 locationSelected,
                 binding.etAddress.text.toString(),
-                hasImageProfile
+                hasImageProfile,
+                idImage
             )
             showProgress()
         }
@@ -130,7 +131,10 @@ class RegisterActivity : AppCompatActivity() {
 
             binding.ivProfile.setImageURI(selectedImageUri)
 
-            selectedImageUri?.let { viewModel.saveImageUserInStorage(it) }
+            idImage = System.currentTimeMillis().toString()
+
+
+            selectedImageUri?.let { viewModel.saveImageUserInStorage(it, idImage) }
 
             hasImageProfile = true
         }
@@ -150,32 +154,6 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun requestPermissionLocation() {
-
-        val locationPermissions = arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-        val requestCode = 1
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-
-            //Ya existen permisos
-
-        } else {
-
-            ActivityCompat.requestPermissions(this, locationPermissions, requestCode)
-        }
-
-    }
 
     private fun setupViewModelObserver() {
         viewModel.userValidationMutable.observe(this, Observer { userValidator ->
