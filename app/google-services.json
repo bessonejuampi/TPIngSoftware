@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "953776637892-dicpj1heng5tf2hst11mf1peh9afk9gg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tpingsoftware",
+            "certificate_hash": "47ed983eabed93bbbfaaeb52cde9021e414146a0"
+          }
+        },
+        {
           "client_id": "953776637892-2non5q4c1lk3qpkharkssr6fchjen288.apps.googleusercontent.com",
           "client_type": 3
         }

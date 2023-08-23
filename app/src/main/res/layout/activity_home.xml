@@ -7,11 +7,12 @@
     android:orientation="vertical"
     tools:context=".ui.view.HomeActivity">
 
-    <Button
-        android:id="@+id/btSignOut"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarHome"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cerrar sesión" />
+        app:title="ServiFinder"
+        android:background="@color/primary_color"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
