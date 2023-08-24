@@ -5,13 +5,12 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tpingsoftware.di.repository.ForgotPasswordContract
-import com.example.tpingsoftware.di.repository.ForgotPasswordRepository
+import com.example.tpingsoftware.di.repository.UserRepositoryContract
 import com.example.tpingsoftware.ui.view.LoginActivity
 import kotlinx.coroutines.launch
 
 class ForgotPasswordViewModel(
-    private val repository: ForgotPasswordContract,
+    private val repository: UserRepositoryContract,
     private val context: Context
 ) : ViewModel() {
 

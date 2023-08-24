@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tpingsoftware.R
-import com.example.tpingsoftware.di.repository.RegisterRepositoryContract
 import com.example.tpingsoftware.ui.view.HomeActivity
 import com.example.tpingsoftware.utils.Dialog
 import com.example.tpingsoftware.utils.UserValidator
@@ -20,6 +19,7 @@ import kotlinx.coroutines.launch
 import android.widget.Toast
 import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
+import com.example.tpingsoftware.di.repository.UserRepositoryContract
 import com.example.tpingsoftware.ui.view.LoginActivity
 import com.example.tpingsoftware.utils.AppPreferences
 import com.example.tpingsoftware.utils.TypeDialog
@@ -27,7 +27,7 @@ import com.example.tpingsoftware.utils.isAddress
 import java.io.IOException
 
 class RegisterViewModel(
-    private val repository: RegisterRepositoryContract,
+    private val repository: UserRepositoryContract,
     val context: Context
 
 ) : ViewModel() {

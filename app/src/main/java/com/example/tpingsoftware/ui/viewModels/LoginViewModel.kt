@@ -5,7 +5,7 @@ import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tpingsoftware.di.repository.LoginRepositoryContract
+import com.example.tpingsoftware.di.repository.UserRepositoryContract
 import com.example.tpingsoftware.ui.view.ForgotPasswordActivity
 import com.example.tpingsoftware.ui.view.HomeActivity
 import com.example.tpingsoftware.ui.view.LoginActivity
@@ -21,7 +21,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val repository: LoginRepositoryContract,
+    private val repository: UserRepositoryContract,
     private val context:Context
 ) :ViewModel() {
 

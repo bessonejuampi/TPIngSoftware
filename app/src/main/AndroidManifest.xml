@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".AppController"
@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TPIngSoftware"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.view.EditProfileActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.view.ForgotPasswordActivity"
             android:exported="false" />
