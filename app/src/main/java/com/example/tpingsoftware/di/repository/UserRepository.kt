@@ -10,8 +10,10 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 interface UserRepositoryContract{
     suspend fun LogInUser(email:String, password:String): Task<AuthResult>
@@ -46,6 +48,10 @@ interface UserRepositoryContract{
     suspend fun getLocalities(idProvince:Int):ArrayList<Location>
 
     suspend fun sendEmailResetPassword(email:String): Task<Void>
+
+    suspend fun getUserDataFromFirebase(email: String): Task<DocumentSnapshot>
+
+    suspend fun getImageProfile(idImage: String): StorageReference
 
 
 }
@@ -155,6 +161,14 @@ class UserRepository(
     //Forgot password
     override suspend fun sendEmailResetPassword(email: String): Task<Void> {
         return auth.sendPasswordResetEmail(email)
+    }
+
+    override suspend fun getUserDataFromFirebase(email: String): Task<DocumentSnapshot> {
+        return firestore.collection("users").document(email).get()
+    }
+
+    override suspend fun getImageProfile(idImage: String): StorageReference {
+       return storage.reference.child("imageProfile/$idImage")
     }
 
 }

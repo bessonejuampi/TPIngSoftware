@@ -97,6 +97,10 @@ class HomeActivity : AppCompatActivity() {
             viewModel.SignOut()
         }
 
+        viewBottomSheet?.findViewById<TextView>(R.id.tvProfile)?.setOnClickListener {
+            viewModel.goToEditProfile()
+        }
+
     }
 
 }
