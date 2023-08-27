@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.util.Objects
 
 interface UserRepositoryContract{
     suspend fun LogInUser(email:String, password:String): Task<AuthResult>
@@ -52,6 +53,15 @@ interface UserRepositoryContract{
     suspend fun getUserDataFromFirebase(email: String): Task<DocumentSnapshot>
 
     suspend fun getImageProfile(idImage: String): StorageReference
+
+    suspend fun updateUser(name: String,
+                           lastName: String,
+                           email: String,
+                           province: String?,
+                           location: String?,
+                           address: String?,
+                           hasImageProfile: Boolean,
+                           idImage:String?) : Task<Void>
 
 
 }
@@ -169,6 +179,29 @@ class UserRepository(
 
     override suspend fun getImageProfile(idImage: String): StorageReference {
        return storage.reference.child("imageProfile/$idImage")
+    }
+
+    override suspend fun updateUser(
+        name: String,
+        lastName: String,
+        email: String,
+        province: String?,
+        location: String?,
+        address: String?,
+        hasImageProfile: Boolean,
+        idImage: String?
+    ): Task<Void> {
+        return firestore.collection("users").document(email).update(
+            hashMapOf(
+                "name" to name,
+                "lastName" to lastName,
+                "province" to province,
+                "location" to location,
+                "address" to address,
+                "hasImageProfile" to hasImageProfile,
+                "idImage" to idImage
+            ) as Map<String, Objects>
+        )
     }
 
 }

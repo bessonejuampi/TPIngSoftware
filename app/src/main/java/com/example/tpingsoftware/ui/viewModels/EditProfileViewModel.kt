@@ -3,15 +3,23 @@ package com.example.tpingsoftware.ui.viewModels
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tpingsoftware.R
 import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.data.models.User
 import com.example.tpingsoftware.di.repository.UserRepositoryContract
 import com.example.tpingsoftware.utils.AppPreferences
+import com.example.tpingsoftware.utils.Dialog
+import com.example.tpingsoftware.utils.TypeDialog
+import com.example.tpingsoftware.utils.UserValidator
+import com.example.tpingsoftware.utils.isAddress
+import com.example.tpingsoftware.utils.isEmail
+import com.example.tpingsoftware.utils.isText
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
@@ -32,6 +40,84 @@ class EditProfileViewModel(
 
     private var _listLocalitiesMutable = MutableLiveData<ArrayList<Location>>()
     var listLocalitiesLiveData : LiveData<ArrayList<Location>> = _listLocalitiesMutable
+
+    private var _userValidationMutable = MutableLiveData<UserValidator?>()
+    var userValidationLiveData : LiveData<UserValidator?> = _userValidationMutable
+
+
+
+    fun validationUser(
+        email :String,
+        name: String?,
+        lastName: String?,
+        province:String?,
+        location:String?,
+        address:String?,
+        hasImageProfile: Boolean,
+        idImage: String?
+    ) {
+        var userValidator = UserValidator()
+
+        //showProgress.value = true
+
+        if (!name.isText()) {
+            userValidator.nameError = context.getString(R.string.text_input_mandatory)
+        }
+        if (!lastName.isText()) {
+            userValidator.lastNameError = context.getString(R.string.text_input_mandatory)
+        }
+
+        if (!province.isText()){
+            userValidator.provinceError = context.getString(R.string.text_input_mandatory)
+        }
+        if (!location.isText()){
+            userValidator.locationError = context.getString(R.string.text_input_mandatory)
+        }
+
+        if (address.isNullOrEmpty()){
+            userValidator.addressError = context.getString(R.string.text_input_mandatory)
+        }else{
+            if (!address.isAddress()){
+                userValidator.addressError = "Por favor, introduzca una driección válida"
+            }
+        }
+        if (!address.isAddress()){
+            userValidator.addressError = context.getString(R.string.text_input_mandatory)
+        }
+
+        if (userValidator.isSuccessfully()) {
+            updateUser(email, name!!, lastName!!, province, location, address, hasImageProfile, idImage)
+//            )
+        } else {
+            //showProgress.value = false
+        }
+        _userValidationMutable.value = userValidator
+
+    }
+
+    private fun updateUser(
+        email: String,
+        name: String,
+        lastName: String,
+        province: String?,
+        location: String?,
+        address: String?,
+        hasImageProfile: Boolean,
+        idImage: String?
+    ) {
+
+        viewModelScope.launch {
+            val task = repository.updateUser(name, lastName, email, province, location, address, hasImageProfile, idImage)
+
+            task.addOnCompleteListener {
+                if (task.isSuccessful){
+                    Log.i("Actualizado", "")
+                }else{
+                    Log.i("fallo actualizar", task.exception?.message.toString())
+                }
+            }
+        }
+    }
 
 
 
@@ -95,6 +181,11 @@ class EditProfileViewModel(
             userImage
 
         )
+    }
+
+    fun saveImageUserInStorage(image: Uri ,id:String) {
+
+        repository.saveUserImageInStorage(image, id)
     }
 
 
