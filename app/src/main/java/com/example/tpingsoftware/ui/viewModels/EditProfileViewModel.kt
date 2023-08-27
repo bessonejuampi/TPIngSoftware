@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tpingsoftware.data.models.Location
+import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.data.models.User
 import com.example.tpingsoftware.di.repository.UserRepositoryContract
 import com.example.tpingsoftware.utils.AppPreferences
@@ -22,9 +24,17 @@ class EditProfileViewModel(
     private var _userMutableLiveData = MutableLiveData<User>()
     var userLiveData : LiveData<User> = _userMutableLiveData
 
-
     private var _imageProfileMutableLiveData = MutableLiveData<Uri>()
     var imageProfileLiveData : LiveData<Uri> = _imageProfileMutableLiveData
+
+    private var _listProvincesMutable = MutableLiveData<ArrayList<Province>>()
+    var listProvinceLiveData : LiveData<ArrayList<Province>> = _listProvincesMutable
+
+    private var _listLocalitiesMutable = MutableLiveData<ArrayList<Location>>()
+    var listLocalitiesLiveData : LiveData<ArrayList<Location>> = _listLocalitiesMutable
+
+
+
     fun getUserData(){
 
         viewModelScope.launch {
@@ -46,6 +56,24 @@ class EditProfileViewModel(
         viewModelScope.launch {
             repository.getImageProfile(idImage).downloadUrl.addOnSuccessListener {
                 _imageProfileMutableLiveData.value = it
+            }
+        }
+    }
+
+    fun getProvinces(){
+        viewModelScope.launch {
+            val listProvinces = repository.getProvinces()
+            if (!listProvinces.isNullOrEmpty()){
+                _listProvincesMutable.value = listProvinces
+            }
+        }
+    }
+
+    fun getLocalities(idProvince : Int){
+        viewModelScope.launch {
+            val listLocalities = repository.getLocalities(idProvince)
+            if (!listLocalities.isNullOrEmpty()){
+                _listLocalitiesMutable.value = listLocalities
             }
         }
     }
