@@ -1,6 +1,7 @@
 package com.example.tpingsoftware.ui.view
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,20 +12,24 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.example.tpingsoftware.R
 import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.data.models.User
+import com.example.tpingsoftware.databinding.ActivityEditProfileBinding
 import com.example.tpingsoftware.databinding.ActivityRegisterBinding
 import com.example.tpingsoftware.ui.viewModels.EditProfileViewModel
 import com.example.tpingsoftware.utils.Constants
+import com.example.tpingsoftware.utils.Dialog
+import com.example.tpingsoftware.utils.TypeDialog
 import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditProfileActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityRegisterBinding
+    private lateinit var binding: ActivityEditProfileBinding
 
     private val viewModel: EditProfileViewModel by viewModel()
 
@@ -38,7 +43,7 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        binding = ActivityEditProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupView()
@@ -72,10 +77,8 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun setupView() {
 
-        binding.tfPassword.visibility = View.GONE
-        binding.tfRepeatPassword.visibility = View.GONE
-        binding.tfEmail.visibility = View.GONE
-        binding.btnRegister.text = "Actualizar datos"
+        binding.llBody.visibility = View.GONE
+        binding.lyProgress.visibility = View.VISIBLE
 
         binding.actvProvince.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val selectedOption = parent.getItemAtPosition(position).toString()
@@ -101,7 +104,7 @@ class EditProfileActivity : AppCompatActivity() {
             openGallery()
         }
 
-        binding.btnRegister.setOnClickListener {
+        binding.btnEditProfile.setOnClickListener {
             viewModel.validationUser(
                 currentUser!!.email!!,
                 binding.etName.text.toString(),
@@ -112,7 +115,9 @@ class EditProfileActivity : AppCompatActivity() {
                 currentUser!!.hasImageProfile!!,
                 currentUser!!.idImage
             )
+            showProgress()
         }
+
 
         setupCleanEditText()
     }
@@ -120,6 +125,8 @@ class EditProfileActivity : AppCompatActivity() {
     private fun observeMutableLiveData() {
         viewModel.userLiveData.observe(this,  Observer{ user ->
 
+            binding.llBody.visibility = View.VISIBLE
+            binding.lyProgress.visibility = View.GONE
             currentUser = user
             binding.actvLocalities.setText(user.location)
             locationSelected = currentUser!!.location
@@ -165,6 +172,11 @@ class EditProfileActivity : AppCompatActivity() {
                 }
             }
         })
+
+        viewModel.resultEditProfileLiveData.observe(this, Observer { result ->
+            hideProgress()
+            showAlertDialog(result)
+        })
     }
 
     private fun setupCleanEditText() {
@@ -188,6 +200,7 @@ class EditProfileActivity : AppCompatActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfLastName.error = null
                 hideProgress()
+
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -203,6 +216,7 @@ class EditProfileActivity : AppCompatActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfAddress.error = null
                 hideProgress()
+
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -218,6 +232,7 @@ class EditProfileActivity : AppCompatActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfLocalities.error = null
                 hideProgress()
+
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -269,6 +284,20 @@ class EditProfileActivity : AppCompatActivity() {
         (binding.tfLocalities.editText as? AutoCompleteTextView)?.setAdapter(adapter)
     }
 
+    private fun showAlertDialog(dialog: Dialog) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(dialog.title)
+        builder.setMessage(dialog.description)
+        builder.setPositiveButton("Aceptar") { accept, _ ->
+            if (dialog.result == TypeDialog.GO_TO_HOME) {
+                viewModel.goToHome()
+            }
+            accept.dismiss()
+        }
+        val alertDialog = builder.create()
+        alertDialog.show()
+    }
+
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, Constants.PICK_IMAGE_REQUEST)
@@ -276,12 +305,12 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun showProgress() {
         binding.progressBar.visibility = View.VISIBLE
-        binding.btnRegister.visibility = View.INVISIBLE
+        binding.btnEditProfile.visibility = View.INVISIBLE
     }
 
     private fun hideProgress() {
         binding.progressBar.visibility = View.GONE
-        binding.btnRegister.visibility = View.VISIBLE
+        binding.btnEditProfile.visibility = View.VISIBLE
     }
 
 

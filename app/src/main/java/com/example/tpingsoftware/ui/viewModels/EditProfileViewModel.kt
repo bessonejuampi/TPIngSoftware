@@ -1,6 +1,7 @@
 package com.example.tpingsoftware.ui.viewModels
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -13,6 +14,8 @@ import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.data.models.User
 import com.example.tpingsoftware.di.repository.UserRepositoryContract
+import com.example.tpingsoftware.ui.view.HomeActivity
+import com.example.tpingsoftware.ui.view.LoginActivity
 import com.example.tpingsoftware.utils.AppPreferences
 import com.example.tpingsoftware.utils.Dialog
 import com.example.tpingsoftware.utils.TypeDialog
@@ -44,6 +47,10 @@ class EditProfileViewModel(
     private var _userValidationMutable = MutableLiveData<UserValidator?>()
     var userValidationLiveData : LiveData<UserValidator?> = _userValidationMutable
 
+    private var _resultEditProfileMutable = MutableLiveData<Dialog>()
+    var resultEditProfileLiveData : LiveData<Dialog> = _resultEditProfileMutable
+
+
 
 
     fun validationUser(
@@ -57,8 +64,6 @@ class EditProfileViewModel(
         idImage: String?
     ) {
         var userValidator = UserValidator()
-
-        //showProgress.value = true
 
         if (!name.isText()) {
             userValidator.nameError = context.getString(R.string.text_input_mandatory)
@@ -87,9 +92,6 @@ class EditProfileViewModel(
 
         if (userValidator.isSuccessfully()) {
             updateUser(email, name!!, lastName!!, province, location, address, hasImageProfile, idImage)
-//            )
-        } else {
-            //showProgress.value = false
         }
         _userValidationMutable.value = userValidator
 
@@ -111,9 +113,13 @@ class EditProfileViewModel(
 
             task.addOnCompleteListener {
                 if (task.isSuccessful){
-                    Log.i("Actualizado", "")
+                    _resultEditProfileMutable.value = Dialog(
+                        "Perfil editado con exito!",
+                        "",
+                        TypeDialog.GO_TO_HOME)
                 }else{
-                    Log.i("fallo actualizar", task.exception?.message.toString())
+                    _resultEditProfileMutable.value = Dialog(
+                        "Ha ocurrido un error...", task.exception?.message, TypeDialog.DISMISS)
                 }
             }
         }
@@ -186,6 +192,12 @@ class EditProfileViewModel(
     fun saveImageUserInStorage(image: Uri ,id:String) {
 
         repository.saveUserImageInStorage(image, id)
+    }
+
+    fun goToHome(){
+        val intent = Intent(context, HomeActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
 
