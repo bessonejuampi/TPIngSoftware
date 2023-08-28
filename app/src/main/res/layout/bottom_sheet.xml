@@ -48,9 +48,13 @@
                         android:text="Perfil"
                         android:drawableLeft="@drawable/baseline_person_24"
                         android:textSize="18sp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
                         android:layout_gravity="center_vertical"/>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
                     <TextView
                         android:id="@+id/tvSignOut"
@@ -59,8 +63,8 @@
                         android:text="Cerrar sesión"
                         android:drawableLeft="@drawable/baseline_exit_to_app_24"
                         android:textSize="18sp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
                         android:layout_gravity="center_vertical"/>
 
                 </LinearLayout>
