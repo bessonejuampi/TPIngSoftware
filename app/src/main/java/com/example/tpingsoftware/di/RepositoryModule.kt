@@ -1,5 +1,7 @@
 package com.example.tpingsoftware.di
 
+import com.example.tpingsoftware.di.repository.ServiceRepositoryContract
+import com.example.tpingsoftware.di.repository.ServicesRepository
 import com.example.tpingsoftware.di.repository.UserRepository
 import com.example.tpingsoftware.di.repository.UserRepositoryContract
 import com.google.firebase.auth.FirebaseAuth
@@ -13,6 +15,7 @@ import org.koin.dsl.module
 
 val RepositoryModule = module {
     factory<UserRepositoryContract> { UserRepository(get(), get() ,get(), get(), androidContext()) }
+    factory<ServiceRepositoryContract> { ServicesRepository(get(), get(), get(), androidContext()) }
 }
 
 val FirebaseModule = module {

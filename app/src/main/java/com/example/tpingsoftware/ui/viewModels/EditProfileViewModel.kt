@@ -81,13 +81,10 @@ class EditProfileViewModel(
 
         if (address.isNullOrEmpty()){
             userValidator.addressError = context.getString(R.string.text_input_mandatory)
-        }else{
-            if (!address.isAddress()){
+        }else {
+            if (!address.isAddress()) {
                 userValidator.addressError = "Por favor, introduzca una driección válida"
             }
-        }
-        if (!address.isAddress()){
-            userValidator.addressError = context.getString(R.string.text_input_mandatory)
         }
 
         if (userValidator.isSuccessfully()) {

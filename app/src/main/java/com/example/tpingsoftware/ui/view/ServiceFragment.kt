@@ -27,7 +27,6 @@ class ServiceFragment : Fragment() {
         //val adapter = HomeServicesAdapter(/*TODO:pasar listado de service*/)
 
         //binding.rvAllServices.adapter = adapter
-
     }
 
 }

@@ -232,6 +232,7 @@ class EditProfileActivity : AppCompatActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfLocalities.error = null
                 hideProgress()
+                binding.actvLocalities.error = null
 
             }
 
@@ -248,6 +249,7 @@ class EditProfileActivity : AppCompatActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.tfProvince.error = null
                 hideProgress()
+                binding.actvProvince.error = null
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
