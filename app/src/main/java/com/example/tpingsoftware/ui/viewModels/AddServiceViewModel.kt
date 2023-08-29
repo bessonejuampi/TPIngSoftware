@@ -1,7 +1,9 @@
 package com.example.tpingsoftware.ui.viewModels
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +13,9 @@ import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.di.repository.ServiceRepositoryContract
+import com.example.tpingsoftware.ui.view.AddAvailabilityActivity
 import com.example.tpingsoftware.utils.AppPreferences
+import com.example.tpingsoftware.utils.Constants
 import com.example.tpingsoftware.utils.ServiceValidator
 import com.example.tpingsoftware.utils.isAddress
 import com.example.tpingsoftware.utils.isText
@@ -68,7 +72,7 @@ class AddServiceViewModel(
         }
 
         if (serviceValidator.isSuccessfully()) {
-            saveService(Service(
+            val service = Service(
                 UUID.randomUUID().toString(),
                 title!!,
                 description!!,
@@ -77,9 +81,22 @@ class AddServiceViewModel(
                 address!!,
                 idImage,
                 AppPreferences.getUserSession(context)!!
-            ), selectedImageLogoUri)
+            )
+
+            goToAddAvailability(service, selectedImageLogoUri)
         }
         _serviceMutableLiveData.value = serviceValidator
+    }
+
+    private fun goToAddAvailability(service: Service, selectedImageLogoUri: Uri?) {
+        val bundle = Bundle()
+        bundle.putParcelable(Constants.KEY_IMAGE_SELECTED, selectedImageLogoUri)
+        bundle.putParcelable(Constants.KEY_SERVICE_BUNDLE, service)
+
+        val intent = Intent(context, AddAvailabilityActivity::class.java)
+        intent.putExtra(Constants.KEY_EXTRAS_ADD_AVAILABILITY,bundle)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
     private fun saveService(service: Service, selectedImageLogoUri: Uri?) {
