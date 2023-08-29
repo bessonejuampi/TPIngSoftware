@@ -14,7 +14,7 @@ class HomeServicesAdapter(
 
     inner class HomeServicesViewHolder(
         private val context: Context,
-        itemView:ItemServiceHomeBinding
+        private val itemView:ItemServiceHomeBinding
     ):RecyclerView.ViewHolder(itemView.root) {
         fun bind(service: Service) {
 
@@ -22,15 +22,18 @@ class HomeServicesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeServicesViewHolder {
+
         val binding = ItemServiceHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HomeServicesViewHolder(parent.context ,binding)
     }
 
     override fun getItemCount(): Int {
+
        return listService.size
     }
 
     override fun onBindViewHolder(holder: HomeServicesViewHolder, position: Int) {
+
         holder.bind(listService[position])
     }
 }

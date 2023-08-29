@@ -37,11 +37,13 @@ class HomeActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         when(item.itemId){
             R.id.btnBurger -> {
                 setBottomSheet()
@@ -65,6 +67,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+
         super.onBackPressed()
         val intent = Intent(Intent.ACTION_MAIN)
         intent.addCategory(Intent.CATEGORY_HOME)
@@ -76,6 +79,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setBottomSheet() {
+
         val dialog = BottomSheetDialog(this)
         dialog.setCancelable(false)
 
@@ -100,7 +104,6 @@ class HomeActivity : AppCompatActivity() {
         viewBottomSheet?.findViewById<TextView>(R.id.tvProfile)?.setOnClickListener {
             viewModel.goToEditProfile()
         }
-
     }
 
 }

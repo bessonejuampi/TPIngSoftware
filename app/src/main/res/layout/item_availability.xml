@@ -26,11 +26,13 @@
             android:layout_weight="0.5"
             android:layout_margin="8dp"
             android:clickable="false"
+            android:focusable="false"
             app:startIconDrawable="@drawable/baseline_calendar_month_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etAddDate"
                 android:clickable="false"
+                android:focusable="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -43,11 +45,13 @@
             android:layout_weight="0.5"
             android:layout_margin="8dp"
             android:clickable="false"
+            android:focusable="false"
             app:startIconDrawable="@drawable/baseline_watch_later_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etAddHour"
                 android:clickable="false"
+                android:focusable="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
