@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentPagerAdapter
 import com.example.tpingsoftware.R
 import com.example.tpingsoftware.databinding.ActivityHomeBinding
+import com.example.tpingsoftware.ui.view.adapters.TabsFragmentAdapter
 import com.example.tpingsoftware.ui.viewModels.HomeVIewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel

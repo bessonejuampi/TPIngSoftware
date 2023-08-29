@@ -1,4 +1,4 @@
-package com.example.tpingsoftware.ui.view
+package com.example.tpingsoftware.ui.view.adapters
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -8,6 +8,7 @@ import com.example.tpingsoftware.R
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.databinding.ActivityAddAvailabilityBinding
 import com.example.tpingsoftware.ui.view.pickers.DatePickerFragment
+import com.example.tpingsoftware.ui.view.pickers.TimePickerFragment
 import com.example.tpingsoftware.ui.viewModels.AddAvailabilityViewModel
 import com.example.tpingsoftware.ui.viewModels.AddServiceViewModel
 import com.example.tpingsoftware.utils.Constants
@@ -37,6 +38,7 @@ class AddAvailabilityActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
+
         binding.tilAddDAte.setOnClickListener {
             showDatePickerDialog()
         }
@@ -44,6 +46,20 @@ class AddAvailabilityActivity : AppCompatActivity() {
         binding.etAddDate.setOnClickListener {
             showDatePickerDialog()
         }
+
+        binding.etAddHour.setOnClickListener {
+            showTimePickerDialog()
+        }
+
+        binding.tilAddHour.setOnClickListener {
+            showTimePickerDialog()
+        }
+    }
+
+    private fun showTimePickerDialog() {
+
+        val timePicker = TimePickerFragment { onTimeSelected(it) }
+        timePicker.show(supportFragmentManager, "time")
     }
 
     private fun showDatePickerDialog() {
@@ -53,6 +69,12 @@ class AddAvailabilityActivity : AppCompatActivity() {
     }
 
     private fun onDateSelected(day:Int, mouth:Int, year:Int){
+
         binding.etAddDate.setText( "$day / $mouth / $year")
+    }
+
+    private fun onTimeSelected(time:String){
+
+        binding.etAddHour.setText(time)
     }
 }

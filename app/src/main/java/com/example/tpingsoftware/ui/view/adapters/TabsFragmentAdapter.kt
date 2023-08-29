@@ -1,4 +1,4 @@
-package com.example.tpingsoftware.ui.view
+package com.example.tpingsoftware.ui.view.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

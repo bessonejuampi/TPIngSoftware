@@ -114,6 +114,7 @@
                     android:layout_height="wrap_content"
                     android:text="Agregar disponibilidad"
                     android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
                     style="?attr/materialButtonOutlinedStyle"
                     />
 
