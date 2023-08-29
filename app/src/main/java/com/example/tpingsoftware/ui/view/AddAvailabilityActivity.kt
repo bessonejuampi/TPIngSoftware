@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tpingsoftware.R
 import com.example.tpingsoftware.data.models.Availability
@@ -25,14 +26,15 @@ class AddAvailabilityActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddAvailabilityBinding
     private val viewModel : AddAvailabilityViewModel by viewModel()
     private val listItems : ArrayList<Availability> = arrayListOf()
+    private var service: Service? = null
+    private var imageSelected : Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityAddAvailabilityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var service: Service? = null
-        var imageSelected : Uri? = null
+
         val bundle = intent.getBundleExtra(Constants.KEY_EXTRAS_ADD_AVAILABILITY)
         if (bundle != null) {
             service = bundle.getParcelable(Constants.KEY_SERVICE_BUNDLE)
@@ -82,8 +84,21 @@ class AddAvailabilityActivity : AppCompatActivity() {
 
                 addItem()
             }
+
+            binding.btnSaveService.setOnClickListener {
+
+                if (listItems.isNotEmpty()){
+                    Log.i("service", service?.id.toString())
+                    Log.i("img", imageSelected.toString())
+
+                    viewModel.saveService(service!!, imageSelected, listItems )
+                }else{
+                    Toast.makeText(this, "Agrega turnos a tu servicio", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
+
 
     private fun addItem() {
 

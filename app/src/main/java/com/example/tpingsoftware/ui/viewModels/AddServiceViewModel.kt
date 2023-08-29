@@ -99,17 +99,6 @@ class AddServiceViewModel(
         context.startActivity(intent)
     }
 
-    private fun saveService(service: Service, selectedImageLogoUri: Uri?) {
-
-        viewModelScope.launch {
-            repository.saveService(service)
-            if (selectedImageLogoUri != null){
-                repository.saveImageServiceInStorage(selectedImageLogoUri, service.idImage.toString())
-            }
-        }
-
-    }
-
     fun getProvinces(){
 
         viewModelScope.launch {

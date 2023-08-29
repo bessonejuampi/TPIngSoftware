@@ -1,5 +1,6 @@
 package com.example.tpingsoftware.di.repository
 
+import com.example.tpingsoftware.ui.viewModels.AddAvailabilityViewModel
 import com.example.tpingsoftware.ui.viewModels.AddServiceViewModel
 import com.example.tpingsoftware.ui.viewModels.EditProfileViewModel
 import com.example.tpingsoftware.ui.viewModels.ForgotPasswordViewModel
@@ -17,4 +18,5 @@ val ViewModelsModule = module {
     viewModel{ ForgotPasswordViewModel(get(), androidContext()) }
     viewModel{ EditProfileViewModel(get(), androidContext()) }
     viewModel{ AddServiceViewModel(get(), androidContext()) }
+    viewModel{ AddAvailabilityViewModel(get()) }
 }

@@ -93,6 +93,10 @@
         android:layout_marginTop="5dp"
         android:orientation="vertical">
 
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvAvailabilityList"
             android:layout_width="match_parent"
@@ -102,7 +106,22 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSaveService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Publicar servicio"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        style="?attr/materialButtonOutlinedStyle"
+        />
 
 
 </LinearLayout>

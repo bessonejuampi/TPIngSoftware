@@ -2,12 +2,14 @@ package com.example.tpingsoftware.di.repository
 
 import android.content.Context
 import android.net.Uri
+import com.example.tpingsoftware.data.models.Availability
 import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.data.network.ApiClient
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import java.util.UUID
 
 interface ServiceRepositoryContract{
 
@@ -16,6 +18,8 @@ interface ServiceRepositoryContract{
     suspend fun getLocalities(idProvince:Int):ArrayList<Location>
 
     suspend fun saveService(service:Service)
+
+    suspend fun saveAvailability(availability: ArrayList<Availability>, serviceId : String)
 
     fun saveImageServiceInStorage(image: Uri, id:String)
 
@@ -70,6 +74,24 @@ class ServicesRepository(
                     "idProvider" to service.idProvider
                 )
             )
+    }
+
+    override suspend fun saveAvailability(availability: ArrayList<Availability>, serviceId : String) {
+
+        availability.forEach {
+            val id = UUID.randomUUID().toString()
+            firestore.collection("availability")
+                .document(id).set(
+                    hashMapOf(
+                        "id" to id,
+                        "date" to it.date,
+                        "hour" to it.hour,
+                        "idService" to serviceId
+                    )
+                )
+        }
+
+
     }
 
     override fun saveImageServiceInStorage(image: Uri, id:String) {
