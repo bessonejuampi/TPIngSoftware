@@ -80,18 +80,23 @@ class AddAvailabilityActivity : AppCompatActivity() {
 
             if (!binding.etAddDate.text.isNullOrEmpty() || !binding.etAddHour.text.isNullOrEmpty()){
 
-                val newAvailability = Availability(
-                    binding.etAddDate.text.toString(),
-                    binding.etAddHour.text.toString()
-                )
-
-                listItems.add(newAvailability)
-                binding.rvAvailabilityList.layoutManager = LinearLayoutManager(this)
-                val adapter = AddAvailabilityAdapter(listItems)
-
-                binding.rvAvailabilityList.adapter = adapter
+                addItem()
             }
         }
+    }
+
+    private fun addItem() {
+
+        val newAvailability = Availability(
+            binding.etAddDate.text.toString(),
+            binding.etAddHour.text.toString()
+        )
+
+        listItems.add(newAvailability)
+        binding.rvAvailabilityList.layoutManager = LinearLayoutManager(this)
+        val adapter = AddAvailabilityAdapter(listItems)
+
+        binding.rvAvailabilityList.adapter = adapter
     }
 
     private fun showTimePickerDialog() {
