@@ -23,5 +23,24 @@ class DialogHelper {
 
             builder.show()
         }
+
+        fun showResultDialog(context: Context, title: String,message: String, onAccept: () -> Unit, onCancel: () -> Unit = {}) {
+            val builder = AlertDialog.Builder(context)
+
+            builder.setMessage(message)
+            builder.setTitle(title)
+
+            builder.setPositiveButton(android.R.string.ok) { dialog, which ->
+                onAccept()
+                dialog.dismiss()
+            }
+
+            builder.setNegativeButton(android.R.string.cancel) { dialog, which ->
+                onCancel()
+                dialog.dismiss()
+            }
+
+            builder.show()
+        }
     }
 }

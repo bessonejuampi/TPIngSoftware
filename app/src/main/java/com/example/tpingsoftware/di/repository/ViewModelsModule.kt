@@ -18,5 +18,5 @@ val ViewModelsModule = module {
     viewModel{ ForgotPasswordViewModel(get(), androidContext()) }
     viewModel{ EditProfileViewModel(get(), androidContext()) }
     viewModel{ AddServiceViewModel(get(), androidContext()) }
-    viewModel{ AddAvailabilityViewModel(get()) }
+    viewModel{ AddAvailabilityViewModel(androidContext(), get()) }
 }

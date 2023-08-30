@@ -7,6 +7,7 @@ import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.data.network.ApiClient
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
@@ -17,7 +18,7 @@ interface ServiceRepositoryContract{
 
     suspend fun getLocalities(idProvince:Int):ArrayList<Location>
 
-    suspend fun saveService(service:Service)
+    suspend fun saveService(service:Service): Task<Void>
 
     suspend fun saveAvailability(availability: ArrayList<Availability>, serviceId : String)
 
@@ -60,8 +61,8 @@ class ServicesRepository(
         return listLocalities
     }
 
-    override suspend fun saveService(service: Service) {
-        firestore.collection("services")
+    override suspend fun saveService(service: Service): Task<Void> {
+        return firestore.collection("services")
             .document(service.id).set(
                 hashMapOf(
                     "id" to service.id,
