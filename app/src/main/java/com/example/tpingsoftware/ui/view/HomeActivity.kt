@@ -64,6 +64,14 @@ class HomeActivity : AppCompatActivity() {
         binding.viewPager.adapter = tabsAdapter
         binding.tabs.setupWithViewPager(binding.viewPager)
 
+
+        setupListService()
+
+    }
+
+    private fun setupListService() {
+
+        viewModel.getAllService()
     }
 
     override fun onBackPressed() {
@@ -103,6 +111,10 @@ class HomeActivity : AppCompatActivity() {
 
         viewBottomSheet?.findViewById<TextView>(R.id.tvProfile)?.setOnClickListener {
             viewModel.goToEditProfile()
+        }
+
+        viewBottomSheet?.findViewById<TextView>(R.id.tvEditPassword)?.setOnClickListener {
+            viewModel.goToEditPass()
         }
     }
 

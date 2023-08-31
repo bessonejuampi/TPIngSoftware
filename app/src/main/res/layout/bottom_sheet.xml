@@ -61,6 +61,21 @@
                         android:layout_height="wrap_content"/>
 
                     <TextView
+                        android:id="@+id/tvEditPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cambiar contraseña"
+                        android:drawableLeft="@drawable/baseline_password_24"
+                        android:textSize="18sp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:layout_gravity="center_vertical"/>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
                         android:id="@+id/tvSignOut"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
