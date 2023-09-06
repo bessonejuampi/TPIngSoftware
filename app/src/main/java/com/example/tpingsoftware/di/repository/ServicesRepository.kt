@@ -9,6 +9,7 @@ import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.data.network.ApiClient
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -17,6 +18,8 @@ import java.util.UUID
 interface ServiceRepositoryContract{
 
     suspend fun getAllService(): Task<QuerySnapshot>
+
+    suspend fun getServicesFromUser(email:String): Query
 
     suspend fun getProvinces(): ArrayList<Province>
 
@@ -41,6 +44,11 @@ class ServicesRepository(
     override suspend fun getAllService(): Task<QuerySnapshot> {
 
         return firestore.collection("services").get()
+    }
+
+    override suspend fun getServicesFromUser(email: String): Query {
+
+        return firestore.collection("services").whereEqualTo("idProvider", email)
     }
 
     override suspend fun getProvinces(): ArrayList<Province> {

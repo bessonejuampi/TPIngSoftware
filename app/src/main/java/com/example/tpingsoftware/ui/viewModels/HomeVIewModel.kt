@@ -29,13 +29,16 @@ class HomeVIewModel(
     private val _listServiceMutable = MutableLiveData<ArrayList<Service>>()
     val listServiceLiveData:LiveData<ArrayList<Service>> = _listServiceMutable
 
+    private val _listServiceFromUserMutable = MutableLiveData<ArrayList<Service>>()
+    val listServiceFromUserLiveData:LiveData<ArrayList<Service>> = _listServiceFromUserMutable
+
     fun getAllService() {
 
         viewModelScope.launch {
 
             val response = repository.getAllService()
             response.addOnCompleteListener {
-                if (response.isSuccessful){
+                if (it.isSuccessful){
 
                     toService(response.result.documents)
                 }
@@ -44,7 +47,65 @@ class HomeVIewModel(
 
     }
 
-    fun getImageOfAService(idImage: Long, callback: (Uri) -> Unit){
+    fun getServiceFromUser(email:String){
+        viewModelScope.launch {
+            val response = repository.getServicesFromUser(email)
+
+            response.get().addOnCompleteListener {
+
+                if (it.isSuccessful){
+
+                    toServiceFromUser(it.result.documents)
+                }
+            }
+        }
+    }
+
+    private fun toServiceFromUser(documents: List<DocumentSnapshot>) {
+
+        val listService: ArrayList<Service> = arrayListOf()
+
+        documents.forEach { document ->
+            val service = Service(
+                document.id,
+                document.getString("title")!!,
+                document.getString("description")!!,
+                document.getString("province")!!,
+                document.getString("location")!!,
+                document.getString("address")!!,
+                document.getLong("idImage"),
+                document.getString("idProvider")!!,
+                null
+            )
+
+            if (service.idImage != null) {
+                getImageOfAService(service.idImage!!) { imageUri ->
+                    service.imageUir = imageUri
+                    numberOfImagesLoaded++
+                    listService.add(service)
+
+                    if (numberOfImagesLoaded == documents.size) {
+
+                        _listServiceFromUserMutable.value = listService
+                    }
+                }
+            }else{
+                numberOfImagesLoaded++
+                listService.add(service)
+
+                if (numberOfImagesLoaded == documents.size) {
+
+                    _listServiceFromUserMutable.value = listService
+                }
+            }
+
+
+
+        }
+
+    }
+
+    private fun getImageOfAService(idImage: Long, callback: (Uri) -> Unit){
 
         viewModelScope.launch {
             repository.getImageOfAService(idImage).downloadUrl.addOnSuccessListener {

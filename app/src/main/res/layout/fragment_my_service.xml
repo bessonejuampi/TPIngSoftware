@@ -6,6 +6,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.view.MyServiceFragment">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvServicesFromUser"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:listitem="@layout/item_service_home"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager">
+
+
+    </androidx.recyclerview.widget.RecyclerView>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddService"
         android:layout_width="wrap_content"
