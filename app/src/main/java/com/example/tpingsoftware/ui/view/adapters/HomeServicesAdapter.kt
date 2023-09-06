@@ -3,12 +3,19 @@ package com.example.tpingsoftware.ui.view.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tpingsoftware.R
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.databinding.ItemServiceHomeBinding
+import com.example.tpingsoftware.ui.viewModels.HomeVIewModel
+import com.squareup.picasso.Picasso
 
 class HomeServicesAdapter(
-    private val listService : List<Service>
+    private val listService : List<Service>,
+    private val viewModel : HomeVIewModel
 ) : RecyclerView.Adapter<HomeServicesAdapter.HomeServicesViewHolder>(){
 
 
@@ -17,6 +24,13 @@ class HomeServicesAdapter(
         private val itemView:ItemServiceHomeBinding
     ):RecyclerView.ViewHolder(itemView.root) {
         fun bind(service: Service) {
+
+            itemView.findViewById<TextView>(R.id.tvTitle).text = service.title
+            itemView.findViewById<TextView>(R.id.tvDescription).text = service.description
+
+            if (service.idImage != null){
+                Picasso.get().load(service.imageUir).into(itemView.findViewById<ImageView>(R.id.ivServiceHome))
+            }
 
         }
     }

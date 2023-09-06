@@ -1,5 +1,6 @@
 package com.example.tpingsoftware.data.models
 
+import android.net.Uri
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
@@ -12,5 +13,6 @@ data class Service(
     var location : String,
     var address : String,
     var idImage : Long? = null,
-    var idProvider : String
+    var idProvider : String,
+    var imageUir : Uri?
 ):Parcelable

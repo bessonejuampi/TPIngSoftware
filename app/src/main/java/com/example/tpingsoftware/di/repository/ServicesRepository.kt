@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.util.UUID
 
 interface ServiceRepositoryContract{
@@ -26,6 +27,8 @@ interface ServiceRepositoryContract{
     suspend fun saveAvailability(availability: ArrayList<Availability>, serviceId : String)
 
     fun saveImageServiceInStorage(image: Uri, id:String)
+
+    suspend fun getImageOfAService(idImage:Long) : StorageReference
 
 }
 
@@ -104,5 +107,10 @@ class ServicesRepository(
 
     override fun saveImageServiceInStorage(image: Uri, id:String) {
         storage.reference.child("imagesService/${id}").putFile(image)
+    }
+
+    override suspend fun getImageOfAService(idImage: Long): StorageReference {
+
+        return storage.reference.child("imagesService//$idImage")
     }
 }

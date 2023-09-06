@@ -80,7 +80,8 @@ class AddServiceViewModel(
                 location!!,
                 address!!,
                 idImage,
-                AppPreferences.getUserSession(context)!!
+                AppPreferences.getUserSession(context)!!,
+                null
             )
 
             goToAddAvailability(service, selectedImageLogoUri)

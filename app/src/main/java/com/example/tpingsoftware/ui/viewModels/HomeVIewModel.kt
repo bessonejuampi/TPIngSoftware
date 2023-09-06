@@ -2,6 +2,8 @@ package com.example.tpingsoftware.ui.viewModels
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,12 +23,16 @@ class HomeVIewModel(
     private val repository: ServiceRepositoryContract
 ):ViewModel() {
 
+
+    private var numberOfImagesLoaded = 0
+
     private val _listServiceMutable = MutableLiveData<ArrayList<Service>>()
+    val listServiceLiveData:LiveData<ArrayList<Service>> = _listServiceMutable
+
     fun getAllService() {
 
-
-
         viewModelScope.launch {
+
             val response = repository.getAllService()
             response.addOnCompleteListener {
                 if (response.isSuccessful){
@@ -38,14 +44,58 @@ class HomeVIewModel(
 
     }
 
-    private fun toService(documents: List<DocumentSnapshot>) {
+    fun getImageOfAService(idImage: Long, callback: (Uri) -> Unit){
 
-        val listService : ArrayList<Service> = arrayListOf()
-
-        documents.forEach { document ->
-            val service = Service(document.id, document.getString("title"), )
+        viewModelScope.launch {
+            repository.getImageOfAService(idImage).downloadUrl.addOnSuccessListener {
+                callback(it)
+            }
         }
     }
+
+    private fun toService(documents: List<DocumentSnapshot>) {
+
+        val listService: ArrayList<Service> = arrayListOf()
+
+        documents.forEach { document ->
+            val service = Service(
+                document.id,
+                document.getString("title")!!,
+                document.getString("description")!!,
+                document.getString("province")!!,
+                document.getString("location")!!,
+                document.getString("address")!!,
+                document.getLong("idImage"),
+                document.getString("idProvider")!!,
+                null
+            )
+
+            if (service.idImage != null) {
+                getImageOfAService(service.idImage!!) { imageUri ->
+                    service.imageUir = imageUri
+                    numberOfImagesLoaded++
+                    listService.add(service)
+
+                    if (numberOfImagesLoaded == documents.size) {
+
+                        _listServiceMutable.value = listService
+                    }
+                }
+            }else{
+                numberOfImagesLoaded++
+                listService.add(service)
+
+                if (numberOfImagesLoaded == documents.size) {
+
+                    _listServiceMutable.value = listService
+                }
+            }
+
+
+
+        }
+    }
+
 
 
     fun SignOut(){
