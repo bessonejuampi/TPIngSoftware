@@ -30,6 +30,7 @@ class ServiceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getAllService()
+        showProgress()
 
         observeMutableLiveData()
 
@@ -39,10 +40,21 @@ class ServiceFragment : Fragment() {
 
         viewModel.listServiceLiveData.observe(requireActivity(), Observer { listService ->
 
+            hideProgress()
             binding.rvAllServices.layoutManager = GridLayoutManager(requireContext(), 2)
             val adapter = HomeServicesAdapter(listService, viewModel)
             binding.rvAllServices.adapter = adapter
         })
+    }
+
+    private fun showProgress() {
+
+        binding.lyProgress.visibility = View.VISIBLE
+    }
+
+    private fun hideProgress() {
+
+        binding.lyProgress.visibility = View.GONE
     }
 
 }

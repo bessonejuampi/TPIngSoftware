@@ -22,7 +22,6 @@ class HomeMyServicesAdapter(
         fun bind(service: Service){
 
             itemView.findViewById<TextView>(R.id.tvTitle).text = service.title
-            itemView.findViewById<TextView>(R.id.tvDescription).text = service.description
 
             if (service.idImage != null){
                 Picasso.get().load(service.imageUir).into(itemView.findViewById<ImageView>(R.id.ivServiceHome))

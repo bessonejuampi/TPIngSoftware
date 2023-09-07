@@ -9,7 +9,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.tpingsoftware.databinding.FragmentMyServiceBinding
 import com.example.tpingsoftware.ui.view.adapters.HomeMyServicesAdapter
-import com.example.tpingsoftware.ui.view.adapters.HomeServicesAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.tpingsoftware.ui.viewModels.HomeVIewModel
 import com.example.tpingsoftware.utils.AppPreferences
@@ -33,6 +32,8 @@ class MyServiceFragment : Fragment() {
 
         viewModel.getServiceFromUser(AppPreferences.getUserSession(requireContext())!!)
 
+        showProgress()
+
         setupView()
 
         observeMutableLiveData()
@@ -43,6 +44,7 @@ class MyServiceFragment : Fragment() {
 
         viewModel.listServiceFromUserLiveData.observe(requireActivity(), Observer {
 
+            hideProgress()
             binding.rvServicesFromUser.layoutManager = GridLayoutManager(requireContext(), 2)
             val adapter = HomeMyServicesAdapter(it)
             binding.rvServicesFromUser.adapter = adapter
@@ -51,10 +53,22 @@ class MyServiceFragment : Fragment() {
 
     private fun setupView() {
 
-
         binding.fabAddService.setOnClickListener {
 
             viewModel.goToAddService()
         }
+    }
+
+    private fun showProgress() {
+
+        binding.lyProgress.visibility = View.VISIBLE
+        binding.fabAddService.visibility = View.GONE
+    }
+
+    private fun hideProgress() {
+
+        binding.lyProgress.visibility = View.GONE
+        binding.fabAddService.visibility = View.VISIBLE
+
     }
 }

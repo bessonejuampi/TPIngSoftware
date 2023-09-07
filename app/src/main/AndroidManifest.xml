@@ -18,6 +18,9 @@
         android:theme="@style/Theme.TPIngSoftware"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.DetailsServiceActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.AddAvailabilityActivity"
             android:exported="false" />
         <activity
