@@ -13,10 +13,12 @@ import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.di.repository.ServiceRepositoryContract
-import com.example.tpingsoftware.ui.view.AddAvailabilityActivity
+import com.example.tpingsoftware.ui.view.HomeActivity
 import com.example.tpingsoftware.utils.AppPreferences
 import com.example.tpingsoftware.utils.Constants
+import com.example.tpingsoftware.utils.Dialog
 import com.example.tpingsoftware.utils.ServiceValidator
+import com.example.tpingsoftware.utils.TypeDialog
 import com.example.tpingsoftware.utils.isAddress
 import com.example.tpingsoftware.utils.isText
 import kotlinx.coroutines.launch
@@ -35,6 +37,35 @@ class AddServiceViewModel(
 
     private var _serviceMutableLiveData = MutableLiveData<ServiceValidator?>()
     var serviceLiveData : LiveData<ServiceValidator?> = _serviceMutableLiveData
+
+
+    private var _resultRegisterServiceMutable = MutableLiveData<Dialog>()
+    var resultRegisterServiceLiveData : LiveData<Dialog> = _resultRegisterServiceMutable
+    private fun saveService(service: Service, imageSelected: Uri?) {
+
+        viewModelScope.launch {
+
+            val task = repository.saveService(service)
+            if (imageSelected != null) {
+                repository.saveImageServiceInStorage(imageSelected, service.idImage.toString())
+            }
+
+            task.addOnCompleteListener {
+                if (it.isSuccessful){
+                    _resultRegisterServiceMutable.value = Dialog(
+                        "Registro exitoso!",
+                        "Tu servicio ya esta publicado, solo resta esperar las solicitudes : )",
+                        TypeDialog.GO_TO_HOME)
+                }else{
+                    _resultRegisterServiceMutable.value = Dialog(
+                        "Algo ha salido mal...",
+                        it.exception?.message,
+                        TypeDialog.DISMISS)
+                }
+            }
+        }
+
+    }
 
     fun validateService(
         title: String?,
@@ -84,21 +115,11 @@ class AddServiceViewModel(
                 null
             )
 
-            goToAddAvailability(service, selectedImageLogoUri)
+            saveService(service, selectedImageLogoUri)
         }
         _serviceMutableLiveData.value = serviceValidator
     }
 
-    private fun goToAddAvailability(service: Service, selectedImageLogoUri: Uri?) {
-        val bundle = Bundle()
-        bundle.putParcelable(Constants.KEY_IMAGE_SELECTED, selectedImageLogoUri)
-        bundle.putParcelable(Constants.KEY_SERVICE_BUNDLE, service)
-
-        val intent = Intent(context, AddAvailabilityActivity::class.java)
-        intent.putExtra(Constants.KEY_EXTRAS_ADD_AVAILABILITY,bundle)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-    }
 
     fun getProvinces(){
 
@@ -118,6 +139,14 @@ class AddServiceViewModel(
                 _listLocalitiesMutable.value = listLocalities
             }
         }
+    }
+
+    fun goToHome() {
+
+        val intent = Intent(context, HomeActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+
     }
 
 }

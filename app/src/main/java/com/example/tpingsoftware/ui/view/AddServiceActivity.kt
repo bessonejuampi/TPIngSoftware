@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -18,6 +19,8 @@ import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.databinding.ActivityAddServiceBinding
 import com.example.tpingsoftware.ui.viewModels.AddServiceViewModel
 import com.example.tpingsoftware.utils.Constants
+import com.example.tpingsoftware.utils.DialogHelper
+import com.example.tpingsoftware.utils.TypeDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddServiceActivity : AppCompatActivity() {
@@ -69,6 +72,8 @@ class AddServiceActivity : AppCompatActivity() {
 
         viewModel.serviceLiveData.observe(this, Observer { serviceValidator ->
 
+            hideLoading()
+
             serviceValidator?.let {
                 if (!serviceValidator.titleError.isNullOrEmpty()){
                     binding.tilTitle.error = serviceValidator.titleError
@@ -89,6 +94,22 @@ class AddServiceActivity : AppCompatActivity() {
                 if (!serviceValidator.addressError.isNullOrEmpty()){
                     binding.tfAddress.error = serviceValidator.addressError
                 }
+            }
+        })
+
+        viewModel.resultRegisterServiceLiveData.observe(this, Observer { dialog ->
+
+            hideLoading()
+
+            if (dialog.result == TypeDialog.GO_TO_HOME) {
+                DialogHelper.showResultDialog(
+                    this,
+                    dialog.title!!,
+                    dialog.description!!,
+                    { viewModel.goToHome() },
+                    { viewModel.goToHome() })
+            } else {
+                DialogHelper.showResultDialog(this, dialog.title!!, dialog.description!!, { })
             }
         })
     }
@@ -115,7 +136,9 @@ class AddServiceActivity : AppCompatActivity() {
             openGallery()
         }
 
-        binding.btnAddAvailability.setOnClickListener {
+        binding.btnSaveService.setOnClickListener {
+
+            showLoading()
 
             viewModel.validateService(
                 binding.etTitle.text.toString(),
@@ -236,5 +259,17 @@ class AddServiceActivity : AppCompatActivity() {
                 // Nothing use
             }
         })
+    }
+
+    private fun showLoading() {
+
+        binding.card.visibility = View.GONE
+        binding.lyProgress.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+
+        binding.card.visibility = View.VISIBLE
+        binding.lyProgress.visibility = View.GONE
     }
 }
