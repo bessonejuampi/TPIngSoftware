@@ -116,6 +116,10 @@ class HomeActivity : AppCompatActivity() {
         viewBottomSheet?.findViewById<TextView>(R.id.tvEditPassword)?.setOnClickListener {
             viewModel.goToEditPass()
         }
+
+        viewBottomSheet?.findViewById<TextView>(R.id.tvRequests)?.setOnClickListener {
+            viewModel.goToRequestsReceived()
+        }
     }
 
 }

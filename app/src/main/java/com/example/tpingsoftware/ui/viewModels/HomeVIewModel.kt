@@ -14,6 +14,7 @@ import com.example.tpingsoftware.ui.view.EditProfileActivity
 import com.example.tpingsoftware.ui.view.ForgotPasswordActivity
 import com.example.tpingsoftware.ui.view.HomeActivity
 import com.example.tpingsoftware.ui.view.LoginActivity
+import com.example.tpingsoftware.ui.view.RequestsReceivedActivity
 import com.example.tpingsoftware.utils.AppPreferences
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.launch
@@ -185,6 +186,13 @@ class HomeVIewModel(
     fun goToEditPass() {
 
         val intent = Intent(context, ForgotPasswordActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
+    fun goToRequestsReceived() {
+
+        val intent = Intent(context, RequestsReceivedActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }

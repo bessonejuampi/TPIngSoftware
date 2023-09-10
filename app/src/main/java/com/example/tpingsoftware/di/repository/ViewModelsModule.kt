@@ -7,6 +7,7 @@ import com.example.tpingsoftware.ui.viewModels.ForgotPasswordViewModel
 import com.example.tpingsoftware.ui.viewModels.HomeVIewModel
 import com.example.tpingsoftware.ui.viewModels.LoginViewModel
 import com.example.tpingsoftware.ui.viewModels.RegisterViewModel
+import com.example.tpingsoftware.ui.viewModels.RequestReceivedViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -19,4 +20,5 @@ val ViewModelsModule = module {
     viewModel{ EditProfileViewModel(get(), androidContext()) }
     viewModel{ AddServiceViewModel(get(), androidContext()) }
     viewModel{ DetailServiceVIewModel(get(), androidContext())}
+    viewModel{ RequestReceivedViewModel(get(), androidContext()) }
 }

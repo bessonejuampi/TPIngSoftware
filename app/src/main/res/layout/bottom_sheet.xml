@@ -49,7 +49,7 @@
                         android:id="@+id/tvProfile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Perfil"
+                        android:text=" Perfil"
                         android:drawableLeft="@drawable/baseline_person_24"
                         android:textSize="18sp"
                         android:paddingTop="6dp"
@@ -64,8 +64,23 @@
                         android:id="@+id/tvEditPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Cambiar contraseña"
+                        android:text=" Cambiar contraseña"
                         android:drawableLeft="@drawable/baseline_password_24"
+                        android:textSize="18sp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:layout_gravity="center_vertical"/>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/tvRequests"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=" Solicitudes recibidas"
+                        android:drawableLeft="@drawable/baseline_archive_24"
                         android:textSize="18sp"
                         android:paddingTop="6dp"
                         android:paddingBottom="6dp"
@@ -79,7 +94,7 @@
                         android:id="@+id/tvSignOut"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Cerrar sesión"
+                        android:text=" Cerrar sesión"
                         android:drawableLeft="@drawable/baseline_exit_to_app_24"
                         android:textSize="18sp"
                         android:paddingTop="6dp"

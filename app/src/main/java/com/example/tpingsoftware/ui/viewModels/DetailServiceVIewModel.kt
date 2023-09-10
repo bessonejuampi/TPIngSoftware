@@ -20,11 +20,11 @@ class DetailServiceVIewModel(
     private var _requestServiceMutable = MutableLiveData<Dialog>()
     var requestServiceLiveData: LiveData<Dialog> = _requestServiceMutable
 
-    fun sendRequest(idService: String, requestingUser: String?) {
+    fun sendRequest(idService: String, requestingUser: String?, idProvider : String) {
 
         viewModelScope.launch {
 
-            repository.sendRequest(idService, requestingUser!!).addOnCompleteListener {
+            repository.sendRequest(idService, requestingUser!!, idProvider).addOnCompleteListener {
                 if (it.isSuccessful) {
                     _requestServiceMutable.value = Dialog(
                         "Solicitud enviada!",

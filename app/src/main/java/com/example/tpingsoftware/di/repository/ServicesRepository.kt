@@ -21,121 +21,129 @@ interface ServiceRepositoryContract{
 
     suspend fun getServicesFromUser(email:String): Query
 
-    suspend fun getProvinces(): ArrayList<Province>
+        suspend fun getProvinces(): ArrayList<Province>
 
-    suspend fun getLocalities(idProvince:Int):ArrayList<Location>
+        suspend fun getLocalities(idProvince:Int):ArrayList<Location>
 
-    suspend fun saveService(service:Service): Task<Void>
+        suspend fun saveService(service:Service): Task<Void>
 
-    suspend fun saveAvailability(availability: ArrayList<Availability>, serviceId : String)
+        suspend fun saveAvailability(availability: ArrayList<Availability>, serviceId : String)
 
-    fun saveImageServiceInStorage(image: Uri, id:String)
+        fun saveImageServiceInStorage(image: Uri, id:String)
 
-    suspend fun getImageOfAService(idImage:Long) : StorageReference
+        suspend fun getImageOfAService(idImage:Long) : StorageReference
 
-    suspend fun sendRequest(idService : String, requestingUser:String): Task<Void>
+        suspend fun sendRequest(idService : String, requestingUser:String, idProvider:String): Task<Void>
 
-}
+        suspend fun getRequestReceived(user:String) : Query
 
-class ServicesRepository(
-    private val apiClient : ApiClient,
-    private val firestore : FirebaseFirestore,
-    private val storage: FirebaseStorage,
-    private val context: Context
-) : ServiceRepositoryContract{
-    override suspend fun getAllService(): Task<QuerySnapshot> {
-
-        return firestore.collection("services").get()
     }
 
-    override suspend fun getServicesFromUser(email: String): Query {
+    class ServicesRepository(
+        private val apiClient : ApiClient,
+        private val firestore : FirebaseFirestore,
+        private val storage: FirebaseStorage,
+        private val context: Context
+    ) : ServiceRepositoryContract{
+        override suspend fun getAllService(): Task<QuerySnapshot> {
 
-        return firestore.collection("services").whereEqualTo("idProvider", email)
-    }
-
-    override suspend fun getProvinces(): ArrayList<Province> {
-
-        val listProvinces = arrayListOf<Province>()
-        val listProvincesResponse = apiClient.getProvinces()
-        if (listProvincesResponse.isSuccessful){
-            listProvincesResponse.body()?.listProvinces?.forEach { province ->
-                listProvinces.add(province)
-            }
+            return firestore.collection("services").get()
         }
-        return listProvinces
-    }
 
-    override suspend fun getLocalities(idProvince: Int): ArrayList<Location> {
+        override suspend fun getServicesFromUser(email: String): Query {
 
-        val listLocalities = arrayListOf<Location>()
-        val listLocalitiesFirstResponse = apiClient.getLocalities(idProvince, 1)
-        if (listLocalitiesFirstResponse.isSuccessful){
-            val numberOfLocalities =  listLocalitiesFirstResponse.body()?.total
-            val secondResponse = apiClient.getLocalities(idProvince, numberOfLocalities!!)
-            secondResponse.body()?.localities?.forEach { location ->
-                if (location.municipality.id != 0){
-                    listLocalities.add(location)
+            return firestore.collection("services").whereEqualTo("idProvider", email)
+        }
+
+        override suspend fun getProvinces(): ArrayList<Province> {
+
+            val listProvinces = arrayListOf<Province>()
+            val listProvincesResponse = apiClient.getProvinces()
+            if (listProvincesResponse.isSuccessful){
+                listProvincesResponse.body()?.listProvinces?.forEach { province ->
+                    listProvinces.add(province)
                 }
             }
+            return listProvinces
         }
-        return listLocalities
-    }
 
-    override suspend fun saveService(service: Service): Task<Void> {
-        return firestore.collection("services")
-            .document(service.id).set(
-                hashMapOf(
-                    "id" to service.id,
-                    "title" to service.title,
-                    "description" to service.description,
-                    "province" to service.province,
-                    "location" to service.location,
-                    "address" to service.address,
-                    "idImage" to service.idImage,
-                    "idProvider" to service.idProvider
-                )
-            )
-    }
+        override suspend fun getLocalities(idProvince: Int): ArrayList<Location> {
 
-    override suspend fun saveAvailability(availability: ArrayList<Availability>, serviceId : String) {
+            val listLocalities = arrayListOf<Location>()
+            val listLocalitiesFirstResponse = apiClient.getLocalities(idProvince, 1)
+            if (listLocalitiesFirstResponse.isSuccessful){
+                val numberOfLocalities =  listLocalitiesFirstResponse.body()?.total
+                val secondResponse = apiClient.getLocalities(idProvince, numberOfLocalities!!)
+                secondResponse.body()?.localities?.forEach { location ->
+                    if (location.municipality.id != 0){
+                        listLocalities.add(location)
+                    }
+                }
+            }
+            return listLocalities
+        }
 
-        availability.forEach {
-            val id = UUID.randomUUID().toString()
-            firestore.collection("availability")
-                .document(id).set(
+        override suspend fun saveService(service: Service): Task<Void> {
+            return firestore.collection("services")
+                .document(service.id).set(
                     hashMapOf(
-                        "id" to id,
-                        "date" to it.date,
-                        "hour" to it.hour,
-                        "idService" to serviceId
+                        "id" to service.id,
+                        "title" to service.title,
+                        "description" to service.description,
+                        "province" to service.province,
+                        "location" to service.location,
+                        "address" to service.address,
+                        "idImage" to service.idImage,
+                        "idProvider" to service.idProvider
                     )
                 )
         }
 
+        override suspend fun saveAvailability(availability: ArrayList<Availability>, serviceId : String) {
 
-    }
+            availability.forEach {
+                val id = UUID.randomUUID().toString()
+                firestore.collection("availability")
+                    .document(id).set(
+                        hashMapOf(
+                            "id" to id,
+                            "date" to it.date,
+                            "hour" to it.hour,
+                            "idService" to serviceId
+                        )
+                    )
+            }
 
-    override fun saveImageServiceInStorage(image: Uri, id:String) {
-        storage.reference.child("imagesService/${id}").putFile(image)
-    }
 
-    override suspend fun getImageOfAService(idImage: Long): StorageReference {
+        }
 
-        return storage.reference.child("imagesService//$idImage")
-    }
+        override fun saveImageServiceInStorage(image: Uri, id:String) {
+            storage.reference.child("imagesService/${id}").putFile(image)
+        }
 
-    override suspend fun sendRequest(idService: String, requestingUser: String): Task<Void> {
+        override suspend fun getImageOfAService(idImage: Long): StorageReference {
 
-        val id = UUID.randomUUID().toString()
-        return firestore.collection("request")
-            .document(id).set(
-                hashMapOf(
-                    "id" to id,
-                    "idService" to idService,
-                    "idRequestingUser" to requestingUser,
-                    "state" to "pending"
+            return storage.reference.child("imagesService//$idImage")
+        }
+
+        override suspend fun sendRequest(idService: String, requestingUser: String, idProvider:String): Task<Void> {
+
+            val id = UUID.randomUUID().toString()
+            return firestore.collection("request")
+                .document(id).set(
+                    hashMapOf(
+                        "id" to id,
+                        "idService" to idService,
+                        "idProvider" to idProvider,
+                        "idRequestingUser" to requestingUser,
+                        "state" to "pending"
+                    )
+
                 )
+        }
 
-            )
+        override suspend fun getRequestReceived(user: String): Query {
+
+            return firestore.collection("request").whereEqualTo("idProvider", user)
     }
 }
