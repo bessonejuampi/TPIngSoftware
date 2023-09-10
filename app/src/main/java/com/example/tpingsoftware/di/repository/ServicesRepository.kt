@@ -33,6 +33,8 @@ interface ServiceRepositoryContract{
 
     suspend fun getImageOfAService(idImage:Long) : StorageReference
 
+    suspend fun sendRequest(idService : String, requestingUser:String): Task<Void>
+
 }
 
 class ServicesRepository(
@@ -120,5 +122,20 @@ class ServicesRepository(
     override suspend fun getImageOfAService(idImage: Long): StorageReference {
 
         return storage.reference.child("imagesService//$idImage")
+    }
+
+    override suspend fun sendRequest(idService: String, requestingUser: String): Task<Void> {
+
+        val id = UUID.randomUUID().toString()
+        return firestore.collection("request")
+            .document(id).set(
+                hashMapOf(
+                    "id" to id,
+                    "idService" to idService,
+                    "idRequestingUser" to requestingUser,
+                    "state" to "pending"
+                )
+
+            )
     }
 }

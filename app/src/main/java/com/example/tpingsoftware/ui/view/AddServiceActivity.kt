@@ -263,13 +263,13 @@ class AddServiceActivity : AppCompatActivity() {
 
     private fun showLoading() {
 
-        binding.card.visibility = View.GONE
+        binding.llBody.visibility = View.GONE
         binding.lyProgress.visibility = View.VISIBLE
     }
 
     private fun hideLoading() {
 
-        binding.card.visibility = View.VISIBLE
+        binding.llBody.visibility = View.VISIBLE
         binding.lyProgress.visibility = View.GONE
     }
 }
