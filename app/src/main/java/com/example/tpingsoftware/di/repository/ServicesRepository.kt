@@ -5,6 +5,7 @@ import android.net.Uri
 import com.example.tpingsoftware.data.models.Availability
 import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
+import com.example.tpingsoftware.data.models.Request
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.data.network.ApiClient
 import com.google.android.gms.tasks.Task
@@ -21,21 +22,23 @@ interface ServiceRepositoryContract{
 
     suspend fun getServicesFromUser(email:String): Query
 
-        suspend fun getProvinces(): ArrayList<Province>
+    suspend fun getProvinces(): ArrayList<Province>
 
-        suspend fun getLocalities(idProvince:Int):ArrayList<Location>
+    suspend fun getLocalities(idProvince:Int):ArrayList<Location>
 
-        suspend fun saveService(service:Service): Task<Void>
+    suspend fun saveService(service:Service): Task<Void>
 
-        suspend fun saveAvailability(availability: ArrayList<Availability>, serviceId : String)
+    suspend fun saveAvailability(availability: ArrayList<Availability>, serviceId : String)
 
-        fun saveImageServiceInStorage(image: Uri, id:String)
+    fun saveImageServiceInStorage(image: Uri, id:String)
 
-        suspend fun getImageOfAService(idImage:Long) : StorageReference
+    suspend fun getImageOfAService(idImage:Long) : StorageReference
 
-        suspend fun sendRequest(idService : String, requestingUser:String, idProvider:String): Task<Void>
+    suspend fun sendRequest(idService : String, requestingUser:String, idProvider:String): Task<Void>
 
-        suspend fun getRequestReceived(user:String) : Query
+    suspend fun getRequestReceived(user:String) : Query
+
+    suspend fun changeStateRequest(request: Request, newState: String): Task<Void>
 
     }
 
@@ -146,4 +149,10 @@ interface ServiceRepositoryContract{
 
             return firestore.collection("request").whereEqualTo("idProvider", user)
     }
-}
+
+        override suspend fun changeStateRequest(request: Request, newState: String): Task<Void> {
+
+            val updates =  hashMapOf<String, Any>("state" to newState)
+            return firestore.collection("request").document(request.id).update(updates)
+        }
+    }
