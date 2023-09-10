@@ -6,4 +6,5 @@ object Constants {
     const val GOOGLE_SING_IN = 100
     const val KEY_SERVICE = "service"
     const val KEY_BUNDLE_SERVICE_TO_DETAILS = "extras_service"
+    const val KEY_BUNDLE_SERVICE_TO_EDIT_MY_SERVICE = "extras_edit_my_service"
 }
