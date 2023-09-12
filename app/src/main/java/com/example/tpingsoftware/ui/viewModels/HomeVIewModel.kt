@@ -55,8 +55,9 @@ class HomeVIewModel(
             response.get().addOnCompleteListener {
 
                 if (it.isSuccessful){
-
                     toServiceFromUser(it.result.documents)
+                }else{
+                    _listServiceFromUserMutable.value?.clear()
                 }
             }
         }
@@ -66,22 +67,32 @@ class HomeVIewModel(
 
         val listService: ArrayList<Service> = arrayListOf()
 
-        documents.forEach { document ->
-            val service = Service(
-                document.id,
-                document.getString("title")!!,
-                document.getString("description")!!,
-                document.getString("province")!!,
-                document.getString("location")!!,
-                document.getString("address")!!,
-                document.getLong("idImage"),
-                document.getString("idProvider")!!,
-                null
-            )
+        if(documents.isNotEmpty()){
+            documents.forEach { document ->
+                val service = Service(
+                    document.id,
+                    document.getString("title")!!,
+                    document.getString("description")!!,
+                    document.getString("province")!!,
+                    document.getString("location")!!,
+                    document.getString("address")!!,
+                    document.getLong("idImage"),
+                    document.getString("idProvider")!!,
+                    null
+                )
 
-            if (service.idImage != null) {
-                getImageOfAService(service.idImage!!) { imageUri ->
-                    service.imageUir = imageUri
+                if (service.idImage != null) {
+                    getImageOfAService(service.idImage!!) { imageUri ->
+                        service.imageUir = imageUri
+                        numberOfImagesLoaded++
+                        listService.add(service)
+
+                        if (numberOfImagesLoaded == documents.size) {
+
+                            _listServiceFromUserMutable.value = listService
+                        }
+                    }
+                }else{
                     numberOfImagesLoaded++
                     listService.add(service)
 
@@ -90,18 +101,12 @@ class HomeVIewModel(
                         _listServiceFromUserMutable.value = listService
                     }
                 }
-            }else{
-                numberOfImagesLoaded++
-                listService.add(service)
 
-                if (numberOfImagesLoaded == documents.size) {
 
-                    _listServiceFromUserMutable.value = listService
-                }
+
             }
-
-
-
+        }else{
+            _listServiceFromUserMutable.value = ArrayList()
         }
 
     }

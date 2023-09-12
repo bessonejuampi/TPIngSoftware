@@ -45,10 +45,20 @@ class MyServiceFragment : Fragment() {
         viewModel.listServiceFromUserLiveData.observe(requireActivity(), Observer {
 
             hideProgress()
+
+            if (it.isEmpty()){
+                setupEmptyView()
+            }
             binding.rvServicesFromUser.layoutManager = GridLayoutManager(requireContext(), 2)
             val adapter = HomeMyServicesAdapter(it)
             binding.rvServicesFromUser.adapter = adapter
         })
+    }
+
+    private fun setupEmptyView() {
+        binding.rvServicesFromUser.visibility = View.GONE
+        binding.llEmptyView.visibility = View.VISIBLE
+        binding.fabAddService.visibility = View.VISIBLE
     }
 
     private fun setupView() {
