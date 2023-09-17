@@ -12,6 +12,7 @@ import com.example.tpingsoftware.di.repository.ServiceRepositoryContract
 import com.example.tpingsoftware.ui.view.AddServiceActivity
 import com.example.tpingsoftware.ui.view.EditProfileActivity
 import com.example.tpingsoftware.ui.view.ForgotPasswordActivity
+import com.example.tpingsoftware.ui.view.HiredServicesActivity
 import com.example.tpingsoftware.ui.view.HomeActivity
 import com.example.tpingsoftware.ui.view.LoginActivity
 import com.example.tpingsoftware.ui.view.RequestsReceivedActivity
@@ -198,6 +199,13 @@ class HomeVIewModel(
     fun goToRequestsReceived() {
 
         val intent = Intent(context, RequestsReceivedActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
+    fun goToHiredServices() {
+
+        val intent = Intent(context, HiredServicesActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }

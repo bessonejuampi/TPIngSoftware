@@ -48,6 +48,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etTitle"
+                            android:maxLines="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             />
@@ -63,6 +64,8 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDescription"
                             android:lineBreakWordStyle="phrase"
+                            android:lines="5"
+                            android:maxLines="4"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             />
@@ -107,6 +110,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etAddress"
+                            android:maxLines="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 

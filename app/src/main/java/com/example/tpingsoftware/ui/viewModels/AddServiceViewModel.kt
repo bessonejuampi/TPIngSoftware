@@ -96,10 +96,6 @@ class AddServiceViewModel(
 
         if (address.isNullOrEmpty()){
             serviceValidator.addressError = context.getString(R.string.text_input_mandatory)
-        }else {
-            if (!address.isAddress()) {
-                serviceValidator.addressError = "Por favor, introduzca una driección válida"
-            }
         }
 
         if (serviceValidator.isSuccessfully()) {

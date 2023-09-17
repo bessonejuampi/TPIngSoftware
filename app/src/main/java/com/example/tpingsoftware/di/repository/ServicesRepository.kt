@@ -40,6 +40,8 @@ interface ServiceRepositoryContract{
 
     suspend fun changeStateRequest(request: Request, newState: String): Task<Void>
 
+    suspend fun getHiredServicesUser(user: String) : Query
+
     }
 
     class ServicesRepository(
@@ -154,5 +156,10 @@ interface ServiceRepositoryContract{
 
             val updates =  hashMapOf<String, Any>("state" to newState)
             return firestore.collection("request").document(request.id).update(updates)
+        }
+
+        override suspend fun getHiredServicesUser(user: String): Query {
+
+            return firestore.collection("request").whereEqualTo("idRequestingUser", user)
         }
     }

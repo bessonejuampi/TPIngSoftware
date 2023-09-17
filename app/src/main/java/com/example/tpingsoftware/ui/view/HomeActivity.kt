@@ -120,6 +120,10 @@ class HomeActivity : AppCompatActivity() {
         viewBottomSheet?.findViewById<TextView>(R.id.tvRequests)?.setOnClickListener {
             viewModel.goToRequestsReceived()
         }
+
+        viewBottomSheet?.findViewById<TextView>(R.id.tvHiredServices)?.setOnClickListener {
+            viewModel.goToHiredServices()
+        }
     }
 
 }
