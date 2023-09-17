@@ -4,6 +4,7 @@ import com.example.tpingsoftware.ui.viewModels.AddServiceViewModel
 import com.example.tpingsoftware.ui.viewModels.DetailServiceVIewModel
 import com.example.tpingsoftware.ui.viewModels.EditProfileViewModel
 import com.example.tpingsoftware.ui.viewModels.ForgotPasswordViewModel
+import com.example.tpingsoftware.ui.viewModels.HiredServicesViewModel
 import com.example.tpingsoftware.ui.viewModels.HomeVIewModel
 import com.example.tpingsoftware.ui.viewModels.LoginViewModel
 import com.example.tpingsoftware.ui.viewModels.RegisterViewModel
@@ -21,4 +22,5 @@ val ViewModelsModule = module {
     viewModel{ AddServiceViewModel(get(), androidContext()) }
     viewModel{ DetailServiceVIewModel(get(), androidContext())}
     viewModel{ RequestReceivedViewModel(get(), androidContext()) }
+    viewModel{ HiredServicesViewModel(androidContext(),get()) }
 }

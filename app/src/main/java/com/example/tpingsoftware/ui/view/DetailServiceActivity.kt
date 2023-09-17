@@ -75,7 +75,7 @@ class DetailServiceActivity : AppCompatActivity() {
             DialogHelper.showConfirmationDialog(
                 this,
                 "¿Esta seguro/a que desea solicitar este servico?",
-                { viewModel.sendRequest(service!!.id, AppPreferences.getUserSession(this), service!!.idProvider) },
+                { viewModel.sendRequest(service!!.id, AppPreferences.getUserSession(this), service!!.idProvider, service!!.title) },
                 { hideLoading() })
         }
     }

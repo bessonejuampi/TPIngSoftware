@@ -3,6 +3,7 @@ package com.example.tpingsoftware.data.models
 data class Request(
     val id :String,
     val idProvider:String,
+    val titleService:String,
     val idRequestingUser:String,
     val idService : String,
     val state : TypeStates

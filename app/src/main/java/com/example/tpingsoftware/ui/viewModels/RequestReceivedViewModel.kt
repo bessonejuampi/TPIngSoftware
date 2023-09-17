@@ -98,6 +98,7 @@ class RequestReceivedViewModel(
             val request = Request(
                 document.id,
                 document.getString("idProvider")!!,
+                document.getString("titleService")!!,
                 document.getString("idRequestingUser")!!,
                 document.getString("idService")!!,
                 getState(document.getString("state")!!)
