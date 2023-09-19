@@ -11,6 +11,7 @@ import com.example.tpingsoftware.R
 import com.example.tpingsoftware.databinding.FragmentServiceBinding
 import com.example.tpingsoftware.ui.view.adapters.HomeServicesAdapter
 import com.example.tpingsoftware.ui.viewModels.HomeVIewModel
+import com.example.tpingsoftware.utils.AppPreferences
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ServiceFragment : Fragment() {
@@ -42,7 +43,11 @@ class ServiceFragment : Fragment() {
 
             hideProgress()
             binding.rvAllServices.layoutManager = GridLayoutManager(requireContext(), 2)
-            val adapter = HomeServicesAdapter(listService, viewModel)
+
+            val currentUser = AppPreferences.getUserSession(requireContext())
+            val filteredList = listService.filter { it.idProvider != currentUser }
+
+            val adapter = HomeServicesAdapter(filteredList, viewModel)
             binding.rvAllServices.adapter = adapter
         })
     }
