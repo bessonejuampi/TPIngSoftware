@@ -2,6 +2,7 @@ package com.example.tpingsoftware.ui.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tpingsoftware.R
@@ -36,8 +37,16 @@ class HiredServicesActivity : AppCompatActivity() {
 
             if (!it.isNullOrEmpty()){
                 setupAdapter(it)
+            }else{
+                setupEmptyView()
             }
         })
+    }
+
+    private fun setupEmptyView() {
+
+        binding.llEmptyView.visibility = View.VISIBLE
+        binding.llBody.visibility = View.INVISIBLE
     }
 
     private fun setupAdapter(listRequest: ArrayList<Request>) {

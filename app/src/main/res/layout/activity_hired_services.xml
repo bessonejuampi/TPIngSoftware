@@ -20,4 +20,21 @@
             tools:listitem="@layout/item_hired_services"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/llEmptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:layout_gravity="center"
+            android:text="No tienen ningun servicio publicado" />
+    </LinearLayout>
+
 </LinearLayout>

@@ -71,6 +71,7 @@ class EditProfileActivity : AppCompatActivity() {
             selectedImageUri?.let { viewModel.saveImageUserInStorage(it, idImage!!) }
 
             currentUser!!.hasImageProfile = true
+            currentUser!!.idImage = idImage
         }
     }
 
