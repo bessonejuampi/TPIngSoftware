@@ -42,6 +42,8 @@ interface ServiceRepositoryContract{
 
     suspend fun getHiredServicesUser(user: String) : Query
 
+    suspend fun deleteService(service:Service): Task<Void>
+
     }
 
     class ServicesRepository(
@@ -162,5 +164,28 @@ interface ServiceRepositoryContract{
         override suspend fun getHiredServicesUser(user: String): Query {
 
             return firestore.collection("request").whereEqualTo("idRequestingUser", user)
+        }
+
+        override suspend fun deleteService(service: Service): Task<Void> {
+
+            if (service.idImage != null){
+                storage.reference.child("imagesService/${service.id}").delete()
+            }
+
+            firestore.collection("request")
+                .whereEqualTo("idService", service.id)
+                .whereEqualTo("state", "pending")
+                .get()
+                .addOnSuccessListener { documents ->
+
+                    documents.forEach {
+                        firestore.collection("request")
+                            .document(it.id)
+                            .delete()
+                    }
+                }
+
+            return firestore.collection("services").document(service.id).delete()
+
         }
     }
