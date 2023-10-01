@@ -2,6 +2,8 @@ package com.example.tpingsoftware.ui.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.lifecycle.Observer
 import com.example.tpingsoftware.data.models.Service
@@ -52,9 +54,9 @@ class EditMyServiceActivity : AppCompatActivity() {
 
     private fun setupView() {
 
-        binding.etTitle.setText(service?.title)
-        binding.etDescription.setText(service?.description)
-        binding.etLocation.setText("${service?.location}, ${service?.province}")
+        binding.tvTitle.text = service?.title
+        binding.tvDescription.text = service?.description
+        binding.tvLocation.text = "${service?.location}, ${service?.province}"
 
         if (service?.idImage != null) {
 
@@ -65,6 +67,11 @@ class EditMyServiceActivity : AppCompatActivity() {
 
             showLoading()
             viewModel.deleteService(service!!)
+        }
+
+        binding.btnEditService.setOnClickListener {
+
+            viewModel.goToEditService(service!!)
         }
     }
 

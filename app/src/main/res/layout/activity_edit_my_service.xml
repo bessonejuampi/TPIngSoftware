@@ -28,8 +28,8 @@
             android:layout_margin="8dp"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/etLocation"
+            <TextView
+                android:id="@+id/tvLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Location"
@@ -38,16 +38,16 @@
                 android:drawableRight="@drawable/baseline_location_on_24"
                 android:textAlignment="textEnd"/>
 
-            <EditText
-                android:id="@+id/etTitle"
+            <TextView
+                android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Title"
                 android:textStyle="bold"
                 android:textSize="26sp" />
 
-            <EditText
-                android:id="@+id/etDescription"
+            <TextView
+                android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

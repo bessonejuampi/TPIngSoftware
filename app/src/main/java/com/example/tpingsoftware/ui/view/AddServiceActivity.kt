@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import com.example.tpingsoftware.R
 import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
+import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.databinding.ActivityAddServiceBinding
 import com.example.tpingsoftware.ui.viewModels.AddServiceViewModel
 import com.example.tpingsoftware.utils.Constants
@@ -37,11 +38,19 @@ class AddServiceActivity : AppCompatActivity() {
     private var selectedImageLogoUri : Uri? = null
     private var idImage : Long? = null
 
+    private var service: Service? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddServiceBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (intent.extras != null) {
+
+            val bundle = intent.getBundleExtra(Constants.KEY_BUNDLE_SERVICE_TO_DETAILS)
+            service = bundle!!.getParcelable(Constants.KEY_SERVICE)
+        }
 
         viewModel.getProvinces()
 
@@ -115,6 +124,16 @@ class AddServiceActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
+
+        if (service != null) {
+
+            binding.etTitle.setText(service!!.title)
+            binding.etDescription.setText(service!!.description)
+            binding.etAddress.setText(service!!.address)
+            binding.tfProvince.editText?.setText(service!!.province)
+            binding.tfLocalities.editText?.setText(service!!.location)
+
+        }
 
         binding.actvProvince.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val selectedOption = parent.getItemAtPosition(position).toString()
