@@ -22,6 +22,7 @@ import com.example.tpingsoftware.ui.viewModels.AddServiceViewModel
 import com.example.tpingsoftware.utils.Constants
 import com.example.tpingsoftware.utils.DialogHelper
 import com.example.tpingsoftware.utils.TypeDialog
+import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddServiceActivity : AppCompatActivity() {
@@ -133,6 +134,13 @@ class AddServiceActivity : AppCompatActivity() {
             binding.tfProvince.editText?.setText(service!!.province)
             binding.tfLocalities.editText?.setText(service!!.location)
 
+            if (service?.idImage != null) {
+
+                Picasso.get().load(service!!.imageUir).into(binding.ivLogoService)
+                idImage = service!!.idImage
+                selectedImageLogoUri = service!!.imageUir
+            }
+
         }
 
         binding.actvProvince.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
@@ -160,10 +168,11 @@ class AddServiceActivity : AppCompatActivity() {
             showLoading()
 
             viewModel.validateService(
+                service?.id,
                 binding.etTitle.text.toString(),
                 binding.etDescription.text.toString(),
-                provinceSelected,
-                locationSelected,
+                binding.tfProvince.editText?.text.toString(),
+                binding.tfLocalities.editText?.text.toString(),
                 binding.etAddress.text.toString(),
                 idImage,
                 selectedImageLogoUri

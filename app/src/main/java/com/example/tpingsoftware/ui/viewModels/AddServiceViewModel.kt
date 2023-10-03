@@ -68,6 +68,7 @@ class AddServiceViewModel(
     }
 
     fun validateService(
+        id:String?,
         title: String?,
         description: String?,
         province: String?,
@@ -99,8 +100,13 @@ class AddServiceViewModel(
         }
 
         if (serviceValidator.isSuccessfully()) {
+
+            var idService = id
+            if (id.isNullOrEmpty()){
+                idService = UUID.randomUUID().toString()
+            }
             val service = Service(
-                UUID.randomUUID().toString(),
+                idService!!,
                 title!!,
                 description!!,
                 province!!,
