@@ -1,9 +1,12 @@
 package com.example.tpingsoftware.ui.view
 
+import android.graphics.Color
+import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import com.example.tpingsoftware.R
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.databinding.ActivityDeatilServiceBinding
 import com.example.tpingsoftware.ui.viewModels.DetailServiceVIewModel
@@ -22,6 +25,8 @@ class DetailServiceActivity : AppCompatActivity() {
 
     private val viewModel: DetailServiceVIewModel by viewModel()
 
+    private var isFavorite = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,6 +41,7 @@ class DetailServiceActivity : AppCompatActivity() {
 
         setupView()
         observeMutableLiveData()
+        viewModel.isFavoriteService(service!!.id)
     }
 
     private fun observeMutableLiveData() {
@@ -77,6 +83,17 @@ class DetailServiceActivity : AppCompatActivity() {
                 "¿Esta seguro/a que desea solicitar este servico?",
                 { viewModel.sendRequest(service!!.id, AppPreferences.getUserSession(this), service!!.idProvider, service!!.title) },
                 { hideLoading() })
+        }
+
+        binding.ivFavorite.setOnClickListener{
+
+            if (isFavorite){
+
+            }else{
+                viewModel.addFavorite(service!!.id)
+                val drawable = resources.getDrawable(R.drawable.start_yellow, null)
+                binding.ivFavorite.setImageDrawable(drawable)
+            }
         }
     }
 
