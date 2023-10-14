@@ -33,7 +33,7 @@ class HiredServicesAdapter(
                 }
                 TypeStates.FINISHED -> {
                     itemView.findViewById<TextView>(R.id.tvState).text = "Estado: Finalizado"
-                    itemView.findViewById<TextView>(R.id.llBtnAppreciate).visibility = View.VISIBLE
+                    itemView.findViewById<LinearLayout>(R.id.llBtnAppreciate).visibility = View.VISIBLE
                 }
                 TypeStates.ACCEPTED -> {
                     itemView.findViewById<TextView>(R.id.tvState).text = "Estado: Aceptado"

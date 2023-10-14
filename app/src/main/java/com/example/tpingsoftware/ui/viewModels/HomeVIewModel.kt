@@ -34,6 +34,9 @@ class HomeVIewModel(
     private val _listServiceFromUserMutable = MutableLiveData<ArrayList<Service>>()
     val listServiceFromUserLiveData:LiveData<ArrayList<Service>> = _listServiceFromUserMutable
 
+    private val _listServiceFavoritesFromUserMutable = MutableLiveData<List<Service>>()
+    val listServiceFavoritesFromUserLiveData:LiveData<List<Service>> = _listServiceFavoritesFromUserMutable
+
     fun getAllService() {
 
         viewModelScope.launch {
@@ -61,6 +64,61 @@ class HomeVIewModel(
                     _listServiceFromUserMutable.value?.clear()
                 }
             }
+        }
+    }
+
+    fun getFavoritesServices(user: String) {
+
+        viewModelScope.launch {
+            val response = repository.getFavoritesServices(user)
+           toServiceFromFavorites(response)
+        }
+    }
+
+    private fun toServiceFromFavorites(documents: List<DocumentSnapshot>) {
+
+        val listService: ArrayList<Service> = arrayListOf()
+
+        if(documents.isNotEmpty()){
+            documents.forEach { document ->
+                val service = Service(
+                    document.id,
+                    document.getString("title")!!,
+                    document.getString("description")!!,
+                    document.getString("province")!!,
+                    document.getString("location")!!,
+                    document.getString("address")!!,
+                    document.getLong("idImage"),
+                    document.getString("idProvider")!!,
+                    null
+                )
+
+                if (service.idImage != null) {
+                    getImageOfAService(service.idImage!!) { imageUri ->
+                        service.imageUir = imageUri
+                        numberOfImagesLoaded++
+                        listService.add(service)
+
+                        if (numberOfImagesLoaded == documents.size) {
+
+                            _listServiceFromUserMutable.value = listService
+                        }
+                    }
+                }else{
+                    numberOfImagesLoaded++
+                    listService.add(service)
+
+                    if (numberOfImagesLoaded == documents.size) {
+
+                        _listServiceFavoritesFromUserMutable.value = listService
+                    }
+                }
+
+
+
+            }
+        }else{
+            _listServiceFavoritesFromUserMutable.value = ArrayList()
         }
     }
 
@@ -209,6 +267,4 @@ class HomeVIewModel(
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
-
-
 }

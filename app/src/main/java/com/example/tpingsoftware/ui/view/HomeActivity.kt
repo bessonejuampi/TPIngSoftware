@@ -44,7 +44,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when(item.itemId){
+        when (item.itemId) {
             R.id.btnBurger -> {
                 setBottomSheet()
             }
@@ -52,15 +52,19 @@ class HomeActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun initView(){
+    private fun initView() {
 
         setSupportActionBar(binding.toolbarHome)
 
         viewBottomSheet = layoutInflater.inflate(R.layout.bottom_sheet, null, false)
 
-        val tabsAdapter = TabsFragmentAdapter(supportFragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
+        val tabsAdapter = TabsFragmentAdapter(
+            supportFragmentManager,
+            FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+        )
         tabsAdapter.addItem(ServiceFragment(), "Servicios")
         tabsAdapter.addItem(MyServiceFragment(), "Mis Servicios")
+        tabsAdapter.addItem(FavoritesFragment(), "Favoritos")
         binding.viewPager.adapter = tabsAdapter
         binding.tabs.setupWithViewPager(binding.viewPager)
 

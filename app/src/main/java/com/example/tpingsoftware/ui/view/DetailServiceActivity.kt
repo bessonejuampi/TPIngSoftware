@@ -61,6 +61,19 @@ class DetailServiceActivity : AppCompatActivity() {
             }
         })
 
+        viewModel.isFavoriteServiceLiveData.observe(this, Observer {
+
+            isFavorite = if (it){
+                val drawable = resources.getDrawable(R.drawable.start_yellow, null)
+                binding.ivFavorite.setImageDrawable(drawable)
+                true
+            }else{
+                val drawable = resources.getDrawable(R.drawable.start_border, null)
+                binding.ivFavorite.setImageDrawable(drawable)
+                false
+            }
+        })
+
     }
 
     private fun setupView() {
@@ -89,7 +102,11 @@ class DetailServiceActivity : AppCompatActivity() {
 
             if (isFavorite){
 
+                viewModel.deleteFavorite(service!!.id)
+                val drawable = resources.getDrawable(R.drawable.start_border, null)
+                binding.ivFavorite.setImageDrawable(drawable)
             }else{
+
                 viewModel.addFavorite(service!!.id)
                 val drawable = resources.getDrawable(R.drawable.start_yellow, null)
                 binding.ivFavorite.setImageDrawable(drawable)

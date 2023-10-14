@@ -4,6 +4,7 @@ import kotlin.random.Random
 
 class Utils {
     companion object {
+
         fun generateRandomLettersAndNumbers(): String {
             val characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
             val sb = StringBuilder(5)

@@ -20,6 +20,9 @@ class DetailServiceVIewModel(
     private var _requestServiceMutable = MutableLiveData<Dialog>()
     var requestServiceLiveData: LiveData<Dialog> = _requestServiceMutable
 
+    private var _isFavoriteServiceMutable = MutableLiveData<Boolean>()
+    var isFavoriteServiceLiveData:LiveData<Boolean> = _isFavoriteServiceMutable
+
 
     fun sendRequest(
         idService: String,
@@ -65,7 +68,18 @@ class DetailServiceVIewModel(
 
     fun isFavoriteService(idService: String) {
 
+        viewModelScope.launch {
+            if (repository.isFavoriteService(idService)){
+                _isFavoriteServiceMutable.value = true
+            }
+        }
+    }
 
+    fun deleteFavorite(idService: String) {
+
+        viewModelScope.launch {
+            repository.deleteFavoriteService(idService)
+        }
     }
 
     fun goToHome() {
@@ -74,4 +88,6 @@ class DetailServiceVIewModel(
 
         context.startActivity(intent)
     }
+
+
 }

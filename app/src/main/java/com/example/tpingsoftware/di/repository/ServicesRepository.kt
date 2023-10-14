@@ -12,6 +12,8 @@ import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.data.network.ApiClient
 import com.example.tpingsoftware.utils.AppPreferences
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
@@ -19,6 +21,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 interface ServiceRepositoryContract {
 
@@ -53,9 +57,13 @@ interface ServiceRepositoryContract {
 
     suspend fun deleteService(service: Service): Task<Void>
 
-    suspend fun isFavoriteService(idService: String)
+    suspend fun isFavoriteService(idService: String): Boolean
 
     suspend fun addFavorite(idService: String): Boolean
+
+    suspend fun getFavoritesServices(user: String): List<DocumentSnapshot>
+
+    suspend fun deleteFavoriteService(idService: String)
 
 }
 
@@ -210,22 +218,24 @@ class ServicesRepository(
 
     }
 
-    override suspend fun isFavoriteService(idService: String) {
-
-
-        firestore.collection("favorites").document(AppPreferences.getUserSession(context)!!).get()
-            .addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    val currentFavorites = documentSnapshot.get("services") as List<Favorites>?
-                    if (currentFavorites != null) {
-                        // La lista de favoritos del usuario se encuentra en currentFavorites.services
-                        // Puedes utilizarla para mostrar los servicios favoritos en la interfaz de usuario
+    override suspend fun isFavoriteService(idService: String): Boolean =
+        suspendCoroutine { continuation ->
+            firestore.collection("favorites").document(AppPreferences.getUserSession(context)!!)
+                .get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        val currentFavorites = documentSnapshot.get("services") as List<String>?
+                        val isFavorite = currentFavorites?.contains(idService) == true
+                        continuation.resume(isFavorite)
+                    } else {
+                        continuation.resume(false)
                     }
-                } else {
-                    // El documento de favoritos no existe para el usuario
                 }
-            }
-    }
+                .addOnFailureListener { exception ->
+                    continuation.resume(false)
+                }
+        }
+
 
     override suspend fun addFavorite(idService: String): Boolean {
         return try {
@@ -250,9 +260,61 @@ class ServicesRepository(
                 true
             }
         } catch (e: Exception) {
-            // Manejar errores
+
             e.printStackTrace()
             false
+        }
+    }
+
+    override suspend fun getFavoritesServices(user: String): List<DocumentSnapshot> =
+        suspendCoroutine { continuation ->
+            val favoritesCollection = firestore.collection("favorites").document(user)
+
+            favoritesCollection.get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        val currentFavorites =
+                            documentSnapshot.get("services") as? ArrayList<String>
+
+                        if (!currentFavorites.isNullOrEmpty()) {
+                            val servicesQuery = firestore.collection("services")
+                                .whereIn(FieldPath.documentId(), currentFavorites)
+
+                            servicesQuery.get()
+                                .addOnSuccessListener { querySnapshot ->
+
+                                    continuation.resume(querySnapshot.documents)
+                                }
+                                .addOnFailureListener { exception ->
+                                    // Handle any errors here
+                                    continuation.resume(emptyList())
+                                }
+                        } else {
+                            continuation.resume(emptyList())
+                        }
+                    } else {
+                        continuation.resume(emptyList())
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    continuation.resume(emptyList())
+                }
+        }
+
+    override suspend fun deleteFavoriteService(idService: String) {
+
+        val favoritesCollection =
+            firestore.collection("favorites").document(AppPreferences.getUserSession(context)!!)
+
+        val documentSnapshot = favoritesCollection.get().await()
+
+        if (documentSnapshot.exists()) {
+            val currentFavorites = documentSnapshot.get("services") as? ArrayList<String>
+            if (currentFavorites != null) {
+                currentFavorites.remove(idService)
+                val updateData = hashMapOf("services" to currentFavorites)
+                favoritesCollection.update(updateData as Map<String, Any>).await()
+            }
         }
     }
 }
