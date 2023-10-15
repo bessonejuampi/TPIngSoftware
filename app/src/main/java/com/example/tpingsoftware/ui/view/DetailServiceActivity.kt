@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import com.example.tpingsoftware.R
+import com.example.tpingsoftware.data.models.Appreciation
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.databinding.ActivityDeatilServiceBinding
 import com.example.tpingsoftware.ui.view.adapters.AppreciationsAdapter
@@ -27,6 +28,8 @@ class DetailServiceActivity : AppCompatActivity() {
     private var isFavorite = false
 
     private var appreciationAreVisible = false
+
+    private var listAppreciation = listOf<Appreciation>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,8 +82,10 @@ class DetailServiceActivity : AppCompatActivity() {
         viewModel.appreciationLiveData.observe(this, Observer {
 
             if (it.isNotEmpty()) {
+                listAppreciation = it
                 val adapter = AppreciationsAdapter(it)
                 binding.rvAppreciations.adapter = adapter
+                binding.tvEmptyList.visibility = View.GONE
             }
         })
 
@@ -133,7 +138,9 @@ class DetailServiceActivity : AppCompatActivity() {
         binding.tvAppreciations.setOnClickListener {
 
             if (appreciationAreVisible) {
+
                 binding.rvAppreciations.visibility = View.GONE
+                binding.llAppreciations.visibility = View.GONE
                 binding.tvAppreciations.text = "Mostrar valoraciones"
                 binding.tvAppreciations.setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.expand_more,
@@ -144,7 +151,11 @@ class DetailServiceActivity : AppCompatActivity() {
 
                 appreciationAreVisible = false
             } else {
-                binding.rvAppreciations.visibility = View.VISIBLE
+
+                binding.llAppreciations.visibility = View.VISIBLE
+                if(listAppreciation.isNotEmpty()){
+                    binding.rvAppreciations.visibility = View.VISIBLE
+                }
                 binding.tvAppreciations.text = "Ocultar valoraciones"
                 binding.tvAppreciations.setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.expand_less,

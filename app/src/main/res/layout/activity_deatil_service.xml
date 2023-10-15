@@ -73,16 +73,34 @@
                 android:text="Mostrar valoraciones"
                 android:textColor="@color/primary_color" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvAppreciations"
-                android:visibility="gone"
+            <LinearLayout
+                android:id="@+id/llAppreciations"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_appreciations">
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvAppreciations"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_appreciations">
+                </androidx.recyclerview.widget.RecyclerView>
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/tvEmptyList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:text="Este servicio aún no tiene valoraciones registradas" />
+            </LinearLayout>
         </LinearLayout>
 
         <Button
