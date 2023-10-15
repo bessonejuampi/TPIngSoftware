@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tpingsoftware.data.models.Appreciation
 import com.example.tpingsoftware.data.models.Location
 import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.data.models.Service
@@ -25,6 +26,9 @@ class EditMyServiceViewModel(
 
     private var _resultEditServiceMutable = MutableLiveData<Dialog>()
     var resultEditServiceLiveData:LiveData<Dialog> = _resultEditServiceMutable
+
+    private var _appreciationMutable = MutableLiveData<List<Appreciation>>()
+    var appreciationLiveData:LiveData<List<Appreciation>> = _appreciationMutable
 
     fun deleteService(service: Service) {
 
@@ -66,5 +70,12 @@ class EditMyServiceViewModel(
         intent.putExtra(Constants.KEY_BUNDLE_SERVICE_TO_DETAILS, bundle)
 
         context.startActivity(intent)
+    }
+
+    fun getAppreciations(idService: String) {
+
+        viewModelScope.launch {
+            _appreciationMutable.value = repository.getAppreciations(idService)
+        }
     }
 }

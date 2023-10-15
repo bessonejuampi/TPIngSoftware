@@ -6,8 +6,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.lifecycle.Observer
+import com.example.tpingsoftware.R
+import com.example.tpingsoftware.data.models.Appreciation
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.databinding.ActivityEditMyServiceBinding
+import com.example.tpingsoftware.ui.view.adapters.AppreciationsAdapter
 import com.example.tpingsoftware.ui.viewModels.EditMyServiceViewModel
 import com.example.tpingsoftware.utils.Constants
 import com.example.tpingsoftware.utils.DialogHelper
@@ -22,6 +25,10 @@ class EditMyServiceActivity : AppCompatActivity() {
 
     private var service: Service? = null
 
+    private var appreciationAreVisible = false
+
+    private var listAppreciation = listOf<Appreciation>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,6 +40,7 @@ class EditMyServiceActivity : AppCompatActivity() {
             service = bundle!!.getParcelable(Constants.KEY_SERVICE)
         }
 
+        viewModel.getAppreciations(service!!.id)
         setupView()
         observeMutableLiveData()
     }
@@ -49,6 +57,16 @@ class EditMyServiceActivity : AppCompatActivity() {
                 it.description!!,
                 { viewModel.goToHome() },
                 { viewModel.goToHome() })
+        })
+
+        viewModel.appreciationLiveData.observe(this, Observer {
+
+            if (it.isNotEmpty()) {
+                listAppreciation = it
+                val adapter = AppreciationsAdapter(it)
+                binding.rvAppreciations.adapter = adapter
+                binding.tvEmptyList.visibility = View.GONE
+            }
         })
     }
 
@@ -72,6 +90,38 @@ class EditMyServiceActivity : AppCompatActivity() {
         binding.btnEditService.setOnClickListener {
 
             viewModel.goToEditService(service!!)
+        }
+
+        binding.tvAppreciations.setOnClickListener {
+
+            if (appreciationAreVisible) {
+
+                binding.rvAppreciations.visibility = View.GONE
+                binding.llAppreciations.visibility = View.GONE
+                binding.tvAppreciations.text = "Mostrar valoraciones"
+                binding.tvAppreciations.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.expand_more,
+                    0,
+                    0,
+                    0
+                )
+
+                appreciationAreVisible = false
+            } else {
+
+                binding.llAppreciations.visibility = View.VISIBLE
+                if (listAppreciation.isNotEmpty()) {
+                    binding.rvAppreciations.visibility = View.VISIBLE
+                }
+                binding.tvAppreciations.text = "Ocultar valoraciones"
+                binding.tvAppreciations.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.expand_less,
+                    0,
+                    0,
+                    0
+                )
+                appreciationAreVisible = true
+            }
         }
     }
 
