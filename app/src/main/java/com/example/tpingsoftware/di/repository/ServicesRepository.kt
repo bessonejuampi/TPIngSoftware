@@ -3,6 +3,7 @@ package com.example.tpingsoftware.di.repository
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.example.tpingsoftware.data.models.Appreciation
 import com.example.tpingsoftware.data.models.Availability
 import com.example.tpingsoftware.data.models.Favorites
 import com.example.tpingsoftware.data.models.Location
@@ -14,6 +15,7 @@ import com.example.tpingsoftware.utils.AppPreferences
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
@@ -64,6 +66,7 @@ interface ServiceRepositoryContract {
     suspend fun getFavoritesServices(user: String): List<DocumentSnapshot>
 
     suspend fun deleteFavoriteService(idService: String)
+    fun sendAppreciateService(rating: Float, comment: String, idService: String): Task<Void>
 
 }
 
@@ -316,5 +319,12 @@ class ServicesRepository(
                 favoritesCollection.update(updateData as Map<String, Any>).await()
             }
         }
+    }
+
+    override fun sendAppreciateService(rating: Float, comment: String, idService: String): Task<Void> {
+
+        val serviceRef = firestore.collection("services").document(idService)
+        return serviceRef.update("Appreciations", FieldValue.arrayUnion(Appreciation(rating, comment)))
+
     }
 }

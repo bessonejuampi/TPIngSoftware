@@ -13,10 +13,13 @@ import com.example.tpingsoftware.data.models.Request
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.data.models.TypeStates
 import com.example.tpingsoftware.databinding.ItemHiredServicesBinding
+import com.example.tpingsoftware.ui.view.AppreciateFragment
 
 class HiredServicesAdapter(
     private val listRequest:List<Request>
 ):RecyclerView.Adapter<HiredServicesAdapter.HiredServicesViewHolder>() {
+
+    lateinit var onAppreciateClick: (idService:String) -> Unit
 
     inner class HiredServicesViewHolder(
         private val itemView : ItemHiredServicesBinding,
@@ -34,6 +37,10 @@ class HiredServicesAdapter(
                 TypeStates.FINISHED -> {
                     itemView.findViewById<TextView>(R.id.tvState).text = "Estado: Finalizado"
                     itemView.findViewById<LinearLayout>(R.id.llBtnAppreciate).visibility = View.VISIBLE
+                    itemView.findViewById<Button>(R.id.btnAppreciateService).setOnClickListener {
+
+                        onAppreciateClick(request.idService)
+                    }
                 }
                 TypeStates.ACCEPTED -> {
                     itemView.findViewById<TextView>(R.id.tvState).text = "Estado: Aceptado"

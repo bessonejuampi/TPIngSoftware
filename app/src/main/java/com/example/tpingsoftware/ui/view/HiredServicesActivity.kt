@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tpingsoftware.R
 import com.example.tpingsoftware.data.models.Request
 import com.example.tpingsoftware.databinding.ActivityHiredServicesBinding
 import com.example.tpingsoftware.ui.view.adapters.HiredServicesAdapter
-import com.example.tpingsoftware.ui.view.adapters.RequestsReceivedAdapter
 import com.example.tpingsoftware.ui.viewModels.HiredServicesViewModel
 import com.example.tpingsoftware.utils.AppPreferences
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -53,7 +51,15 @@ class HiredServicesActivity : AppCompatActivity() {
 
         binding.rvHiredServices.layoutManager = LinearLayoutManager(this)
         val adapter = HiredServicesAdapter(listRequest)
-        binding.rvHiredServices.adapter = adapter
+        binding.rvHiredServices.adapter = adapter.also {
+            it.onAppreciateClick = {idService ->
+                val appreciateFragment = AppreciateFragment()
+                appreciateFragment.setRatingListener{rating, comment->
+                    viewModel.sendAppreciateService(rating, comment, idService)
+                }
+                appreciateFragment.show(supportFragmentManager, "floating_view")
+            }
+        }
 
     }
 }
