@@ -63,7 +63,7 @@ class HiredServicesViewModel(
         return listRequest
     }
 
-    fun sendAppreciateService(rating: Float, comment: String, idService: String) {
+    fun sendAppreciateService(rating: Double, comment: String, idService: String) {
         viewModelScope.launch {
             repository.sendAppreciateService(rating, comment, idService)
         }

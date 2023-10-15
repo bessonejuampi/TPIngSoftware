@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tpingsoftware.data.models.Appreciation
 import com.example.tpingsoftware.di.repository.ServiceRepositoryContract
 import com.example.tpingsoftware.ui.view.HomeActivity
 import com.example.tpingsoftware.utils.Dialog
@@ -22,6 +23,9 @@ class DetailServiceVIewModel(
 
     private var _isFavoriteServiceMutable = MutableLiveData<Boolean>()
     var isFavoriteServiceLiveData:LiveData<Boolean> = _isFavoriteServiceMutable
+
+    private var _appreciationMutable = MutableLiveData<List<Appreciation>>()
+    var appreciationLiveData:LiveData<List<Appreciation>> = _appreciationMutable
 
 
     fun sendRequest(
@@ -87,6 +91,14 @@ class DetailServiceVIewModel(
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         context.startActivity(intent)
+    }
+
+    fun getAppreciations(idService: String) {
+
+        viewModelScope.launch {
+            _appreciationMutable.value = repository.getAppreciations(idService)
+        }
+
     }
 
 

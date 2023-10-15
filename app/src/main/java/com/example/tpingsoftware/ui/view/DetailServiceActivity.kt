@@ -1,7 +1,5 @@
 package com.example.tpingsoftware.ui.view
 
-import android.graphics.Color
-import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,6 +7,7 @@ import androidx.lifecycle.Observer
 import com.example.tpingsoftware.R
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.databinding.ActivityDeatilServiceBinding
+import com.example.tpingsoftware.ui.view.adapters.AppreciationsAdapter
 import com.example.tpingsoftware.ui.viewModels.DetailServiceVIewModel
 import com.example.tpingsoftware.utils.AppPreferences
 import com.example.tpingsoftware.utils.Constants
@@ -27,6 +26,8 @@ class DetailServiceActivity : AppCompatActivity() {
 
     private var isFavorite = false
 
+    private var appreciationAreVisible = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,6 +43,7 @@ class DetailServiceActivity : AppCompatActivity() {
         setupView()
         observeMutableLiveData()
         viewModel.isFavoriteService(service!!.id)
+        viewModel.getAppreciations(service!!.id)
     }
 
     private fun observeMutableLiveData() {
@@ -63,14 +65,22 @@ class DetailServiceActivity : AppCompatActivity() {
 
         viewModel.isFavoriteServiceLiveData.observe(this, Observer {
 
-            isFavorite = if (it){
+            isFavorite = if (it) {
                 val drawable = resources.getDrawable(R.drawable.start_yellow, null)
                 binding.ivFavorite.setImageDrawable(drawable)
                 true
-            }else{
+            } else {
                 val drawable = resources.getDrawable(R.drawable.start_border, null)
                 binding.ivFavorite.setImageDrawable(drawable)
                 false
+            }
+        })
+
+        viewModel.appreciationLiveData.observe(this, Observer {
+
+            if (it.isNotEmpty()) {
+                val adapter = AppreciationsAdapter(it)
+                binding.rvAppreciations.adapter = adapter
             }
         })
 
@@ -94,22 +104,55 @@ class DetailServiceActivity : AppCompatActivity() {
             DialogHelper.showConfirmationDialog(
                 this,
                 "¿Esta seguro/a que desea solicitar este servico?",
-                { viewModel.sendRequest(service!!.id, AppPreferences.getUserSession(this), service!!.idProvider, service!!.title) },
+                {
+                    viewModel.sendRequest(
+                        service!!.id,
+                        AppPreferences.getUserSession(this),
+                        service!!.idProvider,
+                        service!!.title
+                    )
+                },
                 { hideLoading() })
         }
 
-        binding.ivFavorite.setOnClickListener{
+        binding.ivFavorite.setOnClickListener {
 
-            if (isFavorite){
+            if (isFavorite) {
 
                 viewModel.deleteFavorite(service!!.id)
                 val drawable = resources.getDrawable(R.drawable.start_border, null)
                 binding.ivFavorite.setImageDrawable(drawable)
-            }else{
+            } else {
 
                 viewModel.addFavorite(service!!.id)
                 val drawable = resources.getDrawable(R.drawable.start_yellow, null)
                 binding.ivFavorite.setImageDrawable(drawable)
+            }
+        }
+
+        binding.tvAppreciations.setOnClickListener {
+
+            if (appreciationAreVisible) {
+                binding.rvAppreciations.visibility = View.GONE
+                binding.tvAppreciations.text = "Mostrar valoraciones"
+                binding.tvAppreciations.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.expand_more,
+                    0,
+                    0,
+                    0
+                )
+
+                appreciationAreVisible = false
+            } else {
+                binding.rvAppreciations.visibility = View.VISIBLE
+                binding.tvAppreciations.text = "Ocultar valoraciones"
+                binding.tvAppreciations.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.expand_less,
+                    0,
+                    0,
+                    0
+                )
+                appreciationAreVisible = true
             }
         }
     }

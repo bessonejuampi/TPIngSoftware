@@ -66,7 +66,10 @@ interface ServiceRepositoryContract {
     suspend fun getFavoritesServices(user: String): List<DocumentSnapshot>
 
     suspend fun deleteFavoriteService(idService: String)
-    fun sendAppreciateService(rating: Float, comment: String, idService: String): Task<Void>
+
+    fun sendAppreciateService(rating: Double, comment: String, idService: String): Task<Void>
+
+    suspend fun getAppreciations(idService: String): List<Appreciation>
 
 }
 
@@ -321,10 +324,44 @@ class ServicesRepository(
         }
     }
 
-    override fun sendAppreciateService(rating: Float, comment: String, idService: String): Task<Void> {
+    override fun sendAppreciateService(
+        rating: Double,
+        comment: String,
+        idService: String
+    ): Task<Void> {
 
         val serviceRef = firestore.collection("services").document(idService)
-        return serviceRef.update("Appreciations", FieldValue.arrayUnion(Appreciation(rating, comment)))
+        return serviceRef.update(
+            "Appreciations",
+            FieldValue.arrayUnion(Appreciation(rating, comment))
+        )
 
+    }
+
+    override suspend fun getAppreciations(idService: String): List<Appreciation> = suspendCoroutine { continuation ->
+
+        val documentReference = firestore.collection("services").document(idService)
+
+        documentReference.get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val appreciations =
+                        documentSnapshot.get("Appreciations") as? ArrayList<HashMap<String, Any>>
+
+                    val listAppreciations = arrayListOf<Appreciation>()
+                    appreciations?.forEach { appreciation ->
+                        val rating = appreciation["rating"] as Double
+                        val comment = appreciation["comment"] as String
+                        listAppreciations.add(Appreciation(rating, comment))
+                    }
+
+                    continuation.resume(listAppreciations)
+                } else {
+                    continuation.resume(emptyList())
+                }
+            }
+            .addOnFailureListener { e ->
+                continuation.resume(emptyList())
+            }
     }
 }

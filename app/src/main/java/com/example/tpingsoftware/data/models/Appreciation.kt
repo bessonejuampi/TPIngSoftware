@@ -1,6 +1,6 @@
 package com.example.tpingsoftware.data.models
 
 data class Appreciation(
-    val rating:Float,
+    val rating:Double,
     val comment:String?
 )

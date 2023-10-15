@@ -17,12 +17,7 @@ class AppreciateFragment : DialogFragment() {
 
     private lateinit var binding: FragmentAppreciateBinding
 
-    private var ratingListener: ((Float, String) -> Unit)? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    private var ratingListener: ((Double, String) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,12 +37,12 @@ class AppreciateFragment : DialogFragment() {
             val rating = binding.ratingBar.rating
             val comment = binding.commentEditText.text.toString()
 
-            ratingListener?.invoke(rating, comment)
+            ratingListener?.invoke(rating.toDouble(), comment)
             dismiss()
         }
     }
 
-    fun setRatingListener(listener: (Float, String) -> Unit) {
+    fun setRatingListener(listener: (Double, String) -> Unit) {
         ratingListener = listener
     }
 }
