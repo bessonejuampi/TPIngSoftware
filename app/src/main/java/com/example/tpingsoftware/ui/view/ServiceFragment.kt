@@ -1,6 +1,7 @@
 package com.example.tpingsoftware.ui.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +36,21 @@ class ServiceFragment : Fragment() {
 
         observeMutableLiveData()
 
+        setupView()
+
+    }
+
+    private fun setupView() {
+
+        binding.ibFilterService.setOnClickListener{
+
+            val filterFragment = FilterServiceFragment()
+            filterFragment.setFilterListener(){province, location->
+                viewModel.filterServices(province, location)
+                showProgress()
+            }
+            filterFragment.show(requireActivity().supportFragmentManager, "floating_view")
+        }
     }
 
     private fun observeMutableLiveData() {

@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tpingsoftware.data.models.Location
+import com.example.tpingsoftware.data.models.Province
 import com.example.tpingsoftware.data.models.Service
 import com.example.tpingsoftware.di.repository.ServiceRepositoryContract
 import com.example.tpingsoftware.ui.view.AddServiceActivity
@@ -23,19 +25,26 @@ import kotlinx.coroutines.launch
 class HomeVIewModel(
     private val context: Context,
     private val repository: ServiceRepositoryContract
-):ViewModel() {
+) : ViewModel() {
 
 
     private var numberOfImagesLoaded = 0
 
     private val _listServiceMutable = MutableLiveData<ArrayList<Service>>()
-    val listServiceLiveData:LiveData<ArrayList<Service>> = _listServiceMutable
+    val listServiceLiveData: LiveData<ArrayList<Service>> = _listServiceMutable
 
     private val _listServiceFromUserMutable = MutableLiveData<ArrayList<Service>>()
-    val listServiceFromUserLiveData:LiveData<ArrayList<Service>> = _listServiceFromUserMutable
+    val listServiceFromUserLiveData: LiveData<ArrayList<Service>> = _listServiceFromUserMutable
 
     private val _listServiceFavoritesFromUserMutable = MutableLiveData<List<Service>>()
-    val listServiceFavoritesFromUserLiveData:LiveData<List<Service>> = _listServiceFavoritesFromUserMutable
+    val listServiceFavoritesFromUserLiveData: LiveData<List<Service>> =
+        _listServiceFavoritesFromUserMutable
+
+    private var _listProvincesMutable = MutableLiveData<ArrayList<Province>>()
+    var listProvinceLiveData: LiveData<ArrayList<Province>> = _listProvincesMutable
+
+    private var _listLocalitiesMutable = MutableLiveData<ArrayList<Location>>()
+    var listLocalitiesLiveData: LiveData<ArrayList<Location>> = _listLocalitiesMutable
 
     fun getAllService() {
 
@@ -43,7 +52,7 @@ class HomeVIewModel(
 
             val response = repository.getAllService()
             response.addOnCompleteListener {
-                if (it.isSuccessful){
+                if (it.isSuccessful) {
 
                     toService(response.result.documents)
                 }
@@ -52,15 +61,15 @@ class HomeVIewModel(
 
     }
 
-    fun getServiceFromUser(email:String){
+    fun getServiceFromUser(email: String) {
         viewModelScope.launch {
             val response = repository.getServicesFromUser(email)
 
             response.get().addOnCompleteListener {
 
-                if (it.isSuccessful){
+                if (it.isSuccessful) {
                     toServiceFromUser(it.result.documents)
-                }else{
+                } else {
                     _listServiceFromUserMutable.value?.clear()
                 }
             }
@@ -71,7 +80,7 @@ class HomeVIewModel(
 
         viewModelScope.launch {
             val response = repository.getFavoritesServices(user)
-           toServiceFromFavorites(response)
+            toServiceFromFavorites(response)
         }
     }
 
@@ -79,7 +88,7 @@ class HomeVIewModel(
 
         val listService: ArrayList<Service> = arrayListOf()
 
-        if(documents.isNotEmpty()){
+        if (documents.isNotEmpty()) {
             documents.forEach { document ->
                 val service = Service(
                     document.id,
@@ -104,7 +113,7 @@ class HomeVIewModel(
                             _listServiceFromUserMutable.value = listService
                         }
                     }
-                }else{
+                } else {
                     numberOfImagesLoaded++
                     listService.add(service)
 
@@ -115,9 +124,8 @@ class HomeVIewModel(
                 }
 
 
-
             }
-        }else{
+        } else {
             _listServiceFavoritesFromUserMutable.value = ArrayList()
         }
     }
@@ -126,7 +134,7 @@ class HomeVIewModel(
 
         val listService: ArrayList<Service> = arrayListOf()
 
-        if(documents.isNotEmpty()){
+        if (documents.isNotEmpty()) {
             documents.forEach { document ->
                 val service = Service(
                     document.id,
@@ -151,7 +159,7 @@ class HomeVIewModel(
                             _listServiceFromUserMutable.value = listService
                         }
                     }
-                }else{
+                } else {
                     numberOfImagesLoaded++
                     listService.add(service)
 
@@ -162,15 +170,14 @@ class HomeVIewModel(
                 }
 
 
-
             }
-        }else{
+        } else {
             _listServiceFromUserMutable.value = ArrayList()
         }
 
     }
 
-    private fun getImageOfAService(idImage: Long, callback: (Uri) -> Unit){
+    private fun getImageOfAService(idImage: Long, callback: (Uri) -> Unit) {
 
         viewModelScope.launch {
             repository.getImageOfAService(idImage).downloadUrl.addOnSuccessListener {
@@ -207,7 +214,7 @@ class HomeVIewModel(
                         _listServiceMutable.value = listService
                     }
                 }
-            }else{
+            } else {
                 numberOfImagesLoaded++
                 listService.add(service)
 
@@ -216,20 +223,78 @@ class HomeVIewModel(
                     _listServiceMutable.value = listService
                 }
             }
-
-
-
         }
     }
 
+    fun getProvinces() {
+        viewModelScope.launch {
+            val listProvinces = repository.getProvinces()
+            if (!listProvinces.isNullOrEmpty()) {
+                _listProvincesMutable.value = listProvinces
+            }
+        }
+    }
+
+    fun getLocalities(idProvince: Int) {
+        viewModelScope.launch {
+            val listLocalities = repository.getLocalities(idProvince)
+            if (!listLocalities.isNullOrEmpty()) {
+                _listLocalitiesMutable.value = listLocalities
+            }
+        }
+    }
+
+    fun filterServices(province: String, location: String?) {
+
+        viewModelScope.launch {
+            var listService = arrayListOf<Service>()
+            repository.getAllService().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    it.result.documents.forEach { documentSnapshot ->
+                         listService.add(toServiceFromFilter(documentSnapshot))
+                    }
+
+                    listService = listService.filter { service ->  service.province == province} as ArrayList<Service>
+
+                    if (!location.isNullOrEmpty()){
+                         listService = listService.filter { service -> service.location == location } as ArrayList<Service>
+                    }
+
+                    _listServiceMutable.value = listService
+                }
+            }
+        }
+    }
+
+    private fun toServiceFromFilter(document: DocumentSnapshot): Service {
+
+        val service = Service(
+            document.id,
+            document.getString("title")!!,
+            document.getString("description")!!,
+            document.getString("province")!!,
+            document.getString("location")!!,
+            document.getString("address")!!,
+            document.getLong("idImage"),
+            document.getString("idProvider")!!,
+            null
+        )
+
+        if (service.idImage != null) {
+            getImageOfAService(service.idImage!!) { imageUri ->
+                service.imageUir = imageUri
+            }
+        }
+        return service
+    }
 
 
-    fun SignOut(){
+    fun SignOut() {
         AppPreferences.deletePreferences(context)
         goToLogin()
     }
 
-    private fun goToLogin(){
+    private fun goToLogin() {
         val intent = Intent(context, LoginActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
@@ -241,7 +306,7 @@ class HomeVIewModel(
         context.startActivity(intent)
     }
 
-    fun goToAddService(){
+    fun goToAddService() {
         val intent = Intent(context, AddServiceActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
