@@ -48,8 +48,19 @@ class ServiceFragment : Fragment() {
             filterFragment.setFilterListener(){province, location->
                 viewModel.filterServices(province, location)
                 showProgress()
+                binding.tvDeleteFilter.visibility = View.VISIBLE
+                val adapter = binding.rvAllServices.adapter as HomeServicesAdapter
+                adapter.clear()
             }
             filterFragment.show(requireActivity().supportFragmentManager, "floating_view")
+        }
+
+        binding.tvDeleteFilter.setOnClickListener {
+            viewModel.getAllService()
+            showProgress()
+            binding.tvDeleteFilter.visibility = View.INVISIBLE
+            val adapter = binding.rvAllServices.adapter as HomeServicesAdapter
+            adapter.clear()
         }
     }
 

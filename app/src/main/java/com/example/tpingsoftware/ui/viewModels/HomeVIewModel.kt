@@ -188,6 +188,8 @@ class HomeVIewModel(
 
     private fun toService(documents: List<DocumentSnapshot>) {
 
+        numberOfImagesLoaded=0
+
         val listService: ArrayList<Service> = arrayListOf()
 
         documents.forEach { document ->

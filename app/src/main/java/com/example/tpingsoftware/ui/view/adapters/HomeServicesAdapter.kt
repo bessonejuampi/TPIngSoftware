@@ -18,10 +18,14 @@ import com.example.tpingsoftware.utils.Constants
 import com.squareup.picasso.Picasso
 
 class HomeServicesAdapter(
-    private val listService : List<Service>,
+    private var listService : List<Service>,
     private val viewModel : HomeVIewModel
 ) : RecyclerView.Adapter<HomeServicesAdapter.HomeServicesViewHolder>(){
 
+    fun clear(){
+        listService = arrayListOf()
+        notifyDataSetChanged()
+    }
 
     inner class HomeServicesViewHolder(
         private val context: Context,
